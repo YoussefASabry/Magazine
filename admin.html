@@ -3,1032 +3,383 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Rising Stars Magazine</title>
-    <meta name="description" content="Admin dashboard for The Rising Times, Rising Stars Language School magazine.">
-    <meta property="og:title" content="Admin Dashboard - Rising Stars Magazine">
-    <meta property="og:description" content="Admin dashboard for Rising Stars Language School magazine.">
-    <meta property="og:url" content="https://therisingtimes.vercel.app/">
-    <meta property="og:image" content="https://therisingtimes.vercel.app/assets/images/logo1.png">
-    <meta property="og:type" content="website">
+    <title>Admin - The Rising Times</title>
+    <meta name="description" content="Editor dashboard for The Rising Times, Rising Stars Language School magazine.">
+    <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
     <link rel="shortcut icon" type="image/png" href="assets/images/decorative.png?v=1">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/images/decorative.png?v=1">
     <link rel="icon" type="image/png" sizes="64x64" href="assets/images/decorative.png?v=1">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/images/decorative.png?v=1">
-    <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
-    <style>
-        .admin-login { max-width: 400px; margin: 100px auto; padding: 40px; background: var(--bg-white); border-radius: 12px; box-shadow: var(--shadow-lg); }
-        .admin-login h2 { text-align: center; margin-bottom: 30px; }
-        .error-msg { background: #ffebee; color: #c62828; padding: 12px; border-radius: 6px; margin-bottom: 20px; display: none; }
-        .success-msg { background: #e8f5e9; color: #2e7d32; padding: 12px; border-radius: 6px; margin-bottom: 20px; display: none; }
-
-        .tabs { display: flex; gap: 4px; margin-bottom: 30px; background: #f0f0f0; border-radius: 8px; padding: 4px; }
-        .tab-btn { flex: 1; padding: 12px 16px; background: none; border: none; font-weight: 600; cursor: pointer; border-radius: 6px; transition: var(--transition); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .tab-btn.active { background: var(--bg-white); box-shadow: var(--shadow-sm); color: var(--primary-gold); }
-        .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.5); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--bg-white); border-radius: 8px; margin-bottom: 8px; box-shadow: var(--shadow-sm); transition: var(--transition); }
-        .item-row:hover { box-shadow: var(--shadow-md); }
-        .item-info { flex: 1; }
-        .item-title { font-weight: 700; font-size: 14px; }
-        .item-meta { font-size: 12px; color: #888; margin-top: 2px; }
-        .item-actions { display: flex; gap: 8px; }
-        .item-actions button { padding: 6px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: var(--transition); }
-        .btn-edit { background: rgba(201,168,76,0.2); color: #8a7020; }
-        .btn-edit:hover { background: var(--primary-gold); color: var(--primary-black); }
-        .btn-delete { background: #ffebee; color: #c62828; }
-        .btn-delete:hover { background: #c62828; color: white; }
-        .btn-star { background: rgba(201,168,76,0.15); color: #8a7020; font-size: 16px; padding: 6px 10px; }
-        .btn-star.active { background: var(--primary-gold); }
-
-        .element-builder { background: #f9f9f9; border-radius: 12px; padding: 20px; margin-top: 20px; }
-        .element-list { min-height: 60px; }
-        .element-item { background: var(--bg-white); border: 2px solid #e0e0e0; border-radius: 8px; padding: 16px; margin-bottom: 10px; position: relative; transition: var(--transition); }
-        .element-item:hover { border-color: var(--primary-gold); }
-        .element-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .element-type-badge { background: var(--primary-gold); color: var(--primary-black); padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .element-controls { display: flex; gap: 4px; }
-        .element-controls button { width: 28px; height: 28px; border: 1px solid #ddd; border-radius: 4px; background: var(--bg-white); cursor: pointer; font-size: 14px; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
-        .element-controls button:hover { background: var(--primary-gold); border-color: var(--primary-gold); }
-        .add-element-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; padding-top: 16px; border-top: 2px dashed #ddd; }
-        .add-element-btn { padding: 8px 16px; background: var(--bg-white); border: 2px solid #ddd; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; transition: var(--transition); }
-        .add-element-btn:hover { border-color: var(--primary-gold); background: rgba(201,168,76,0.1); }
-
-        .preview-panel { background: var(--bg-white); border-radius: 12px; padding: 24px; margin-top: 20px; box-shadow: var(--shadow-sm); border: 2px solid #e0e0e0; }
-        .preview-panel h3 { font-size: 14px; color: #888; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
-
-        .json-panel { background: #1a1a1a; border-radius: 12px; padding: 20px; margin-top: 20px; position: relative; }
-        .json-panel pre { color: #e0e0e0; font-size: 12px; line-height: 1.6; overflow-x: auto; max-height: 400px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; }
-        .json-copy-btn { position: absolute; top: 12px; right: 12px; padding: 6px 16px; background: var(--primary-gold); color: var(--primary-black); border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 700; transition: var(--transition); }
-        .json-copy-btn:hover { background: #b8941f; }
-        .json-copy-btn.copied { background: #4caf50; color: white; }
-
-        .import-area { border: 2px dashed #ddd; border-radius: 12px; padding: 20px; text-align: center; margin-top: 16px; transition: var(--transition); }
-        .import-area:hover { border-color: var(--primary-gold); }
-        .import-area textarea { width: 100%; min-height: 120px; border: none; resize: vertical; font-family: monospace; font-size: 12px; outline: none; background: transparent; }
-
-        .student-picker { background: rgba(201,168,76,0.08); border-radius: 8px; padding: 12px; margin-top: 8px; }
-        .student-picker-item { display: flex; align-items: center; gap: 12px; padding: 8px; background: var(--bg-white); border-radius: 6px; margin-bottom: 6px; }
-        .student-picker-item input { flex: 1; padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; }
-        .student-picker-item select { padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; }
-
-        .form-section { background: var(--bg-white); border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
-        .form-section h3 { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--primary-gold); font-size: 16px; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } }
-
-        .image-picker { display: flex; gap: 8px; align-items: center; }
-        .image-picker input[type="file"] { display: none; }
-        .image-preview { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; border: 2px solid #ddd; }
-    </style>
 </head>
-<body>
-    <div class="bg-stars"></div>
+<body class="admin-body">
+    <div id="toastHost" class="toast-host" aria-live="polite"></div>
 
-    <!-- LOGIN -->
-    <div id="loginScreen" class="admin-login wrapper">
-        <h2>Admin Login</h2>
-        <div class="error-msg" id="loginError">Incorrect password.</div>
-        <div class="form-group">
-            <label class="form-label">Password</label>
-            <input type="password" class="form-input" id="passwordInput" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')checkPassword()">
-        </div>
-        <button class="btn btn-primary" onclick="checkPassword()" style="width:100%">Login</button>
-        <a href="index.html" style="display:block;text-align:center;margin-top:16px;color:var(--primary-gold);font-size:13px;text-decoration:none;font-weight:600;">&larr; Back to Magazine</a>
+    <div id="loginScreen" class="login-screen">
+        <form id="loginForm" class="login-card" novalidate>
+            <img src="assets/images/logo1.png" alt="The Rising Times" class="login-logo">
+            <h1>Editor Login</h1>
+            <p class="muted">Use the shared editor password.</p>
+            <div id="loginError" class="alert alert-error" role="alert" hidden></div>
+            <label class="field">
+                <span>Password</span>
+                <input type="password" id="passwordInput" autocomplete="current-password" required placeholder="Enter editor password">
+            </label>
+            <button type="submit" class="btn btn-primary btn-block" id="loginButton">Login</button>
+            <a href="index.html" class="login-back">&larr; Back to magazine</a>
+        </form>
     </div>
 
-    <!-- ADMIN PANEL -->
-    <div id="adminPanel" style="display:none;">
-        <div class="admin-header" style="position:relative;display:flex;align-items:center;justify-content:center;">
-            <a href="index.html" style="position:absolute;left:20px;color:var(--primary-gold);text-decoration:none;font-size:13px;font-weight:600;">&larr; Magazine</a>
-            <h1>Admin Dashboard</h1>
-            <button class="btn btn-secondary" onclick="logout()" style="position:absolute;right:20px;padding:8px 16px;font-size:12px;">Logout</button>
-        </div>
-
-        <div class="wrapper" style="max-width:1100px;margin:0 auto;padding:30px 20px;">
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('events')">Events</button>
-                <button class="tab-btn" onclick="switchTab('students')">Students</button>
-                <button class="tab-btn" onclick="switchTab('cse')">CSE Council</button>
-                <button class="tab-btn" onclick="switchTab('json')">JSON</button>
+    <div id="adminApp" class="admin-app" hidden>
+        <header class="admin-topbar">
+            <a href="index.html" class="admin-brand">
+                <img src="assets/images/logo1.png" alt="">
+                <span>The Rising Times</span>
+            </a>
+            <div class="admin-user">
+                <span id="userEmail" class="muted"></span>
+                <span id="userRole" class="role-pill"></span>
+                <button type="button" class="btn btn-ghost" id="logoutButton">Logout</button>
             </div>
+        </header>
 
-            <!-- EVENTS TAB -->
-            <div class="tab-content active" id="eventsTab">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-                    <h3 style="margin:0;">All Events</h3>
-                    <button class="btn btn-primary" onclick="openEventEditor()" style="padding:8px 20px;font-size:12px;">+ New Event</button>
+        <aside class="admin-sidebar" aria-label="Admin sections">
+            <button type="button" class="side-link active" data-view="events">Events</button>
+            <button type="button" class="side-link" data-view="students">Students</button>
+            <button type="button" class="side-link" data-view="cse">CSE Council</button>
+            <button type="button" class="side-link" data-view="settings">Site Settings</button>
+            <button type="button" class="side-link" data-view="audit">Audit Log</button>
+            <button type="button" class="side-link" data-view="export">Export</button>
+        </aside>
+
+        <main class="admin-main">
+            <section id="view-events" class="admin-view active">
+                <div class="view-head">
+                    <div>
+                        <h1>Events</h1>
+                        <p class="muted" id="eventsSummary">Loading…</p>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="newEventButton">+ New Event</button>
                 </div>
-                <div id="eventsList"></div>
-
-                <!-- EVENT EDITOR -->
-                <div id="eventEditor" style="display:none;">
-                    <div class="form-section">
-                        <h3 id="editorTitle">New Event</h3>
-                        <input type="hidden" id="editEventId">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Title</label>
-                                <input type="text" class="form-input" id="eventTitle" placeholder="Event title">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Category</label>
-                                <select class="form-select" id="eventCategory">
-                                    <option value="Academic">Academic</option>
-                                    <option value="Technology">Technology</option>
-                                    <option value="Cultural">Cultural</option>
-                                    <option value="Sports">Sports</option>
-                                    <option value="School">School</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Date</label>
-                                <input type="text" class="form-input" id="eventDate" placeholder="e.g. 2026">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Featured</label>
-                                <select class="form-select" id="eventFeatured">
-                                    <option value="false">No</option>
-                                    <option value="true">Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ELEMENT BUILDER -->
-                    <div class="form-section">
-                        <h3>Article Elements</h3>
-                        <div class="element-list" id="elementList"></div>
-                        <div class="add-element-bar">
-                            <button class="add-element-btn" onclick="addElement('text')">+ Text</button>
-                            <button class="add-element-btn" onclick="addElement('image')">+ Image</button>
-                            <button class="add-element-btn" onclick="addElement('slideshow')">+ Slideshow</button>
-                            <button class="add-element-btn" onclick="addElement('video')">+ Video</button>
-                            <button class="add-element-btn" onclick="addElement('quote')">+ Quote</button>
-                            <button class="add-element-btn" onclick="addElement('students')">+ Students</button>
-                            <button class="add-element-btn" onclick="addElement('organizers')" style="background:#DC143C;color:white;border-color:#DC143C;">+ Organizers</button>
-                        </div>
-                    </div>
-
-                    <!-- LIVE PREVIEW -->
-                    <div class="preview-panel">
-                        <h3>Live Preview</h3>
-                        <div id="livePreview" style="min-height:100px;color:#999;text-align:center;padding:40px;">Add elements above to see preview</div>
-                    </div>
-
-                    <div style="display:flex;gap:12px;margin-top:20px;">
-                        <button class="btn btn-primary" onclick="saveEvent()">Save Event</button>
-                        <button class="btn btn-secondary" onclick="cancelEventEditor()">Cancel</button>
-                    </div>
+                <div class="toolbar">
+                    <input type="search" id="eventSearch" class="input" placeholder="Search events…" aria-label="Search events">
+                    <select id="eventStatusFilter" class="input" aria-label="Filter events by status">
+                        <option value="active">Published &amp; drafts</option>
+                        <option value="published">Published</option>
+                        <option value="draft">Drafts</option>
+                        <option value="deleted">Deleted</option>
+                        <option value="all">All</option>
+                    </select>
+                    <select id="eventSort" class="input" aria-label="Sort events">
+                        <option value="order">Manual order</option>
+                        <option value="newest">Newest first</option>
+                        <option value="title">Title A–Z</option>
+                        <option value="date">Event date</option>
+                    </select>
                 </div>
-            </div>
+                <div id="eventsList" class="admin-list" aria-live="polite"></div>
+                <div id="eventsPager" class="pager"></div>
+            </section>
 
-            <!-- STUDENTS TAB -->
-            <div class="tab-content" id="studentsTab">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-                    <h3 style="margin:0;">All Students</h3>
-                    <button class="btn btn-primary" onclick="openStudentEditor()" style="padding:8px 20px;font-size:12px;">+ New Student</button>
-                </div>
-                <input type="text" id="studentSearch" class="form-input" placeholder="Search students..." oninput="renderStudentsList()" style="margin-bottom:16px;">
-                <div id="studentsList"></div>
-
-                <!-- STUDENT EDITOR -->
-                <div id="studentEditor" style="display:none;">
-                    <div class="form-section">
-                        <h3 id="studentEditorTitle">New Student</h3>
-                        <input type="hidden" id="editStudentId">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Name</label>
-                                <input type="text" class="form-input" id="studentName" placeholder="Full name">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Role</label>
-                                <input type="text" class="form-input" id="studentRole" placeholder="e.g. Editor, President">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Quote</label>
-                            <textarea class="form-textarea" id="studentQuote" placeholder="Their quote..." style="min-height:80px;"></textarea>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Image Path</label>
-                                <div class="image-picker">
-                                    <input type="text" class="form-input" id="studentImage" placeholder="assets/images/name.png">
-                                    <label class="btn btn-edit" style="white-space:nowrap;cursor:pointer;">
-                                        Browse
-                                        <input type="file" accept="image/*" onchange="previewStudentImage(this)">
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Type</label>
-                                <select class="form-select" id="studentType">
-                                    <option value="student">Student</option>
-                                    <option value="teacher">Teacher</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Class</label>
-                                <select class="form-select" id="studentClass">
-                                    <option value="Primary">Primary</option>
-                                    <option value="Preparatory">Preparatory</option>
-                                    <option value="Secondary">Secondary</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Star Student</label>
-                                <select class="form-select" id="studentStar">
-                                    <option value="false">No</option>
-                                    <option value="true">Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Top Student</label>
-                                <select class="form-select" id="studentTopStudent">
-                                    <option value="false">No</option>
-                                    <option value="true">Yes</option>
-                                </select>
-                            </div>
-                            <div class="form-group" id="topStudentRoleGroup" style="display:none;">
-                                <label class="form-label">Top Student Role</label>
-                                <input type="text" class="form-input" id="studentTopRole" placeholder="e.g., Math Genius, Best Writer">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Achievements (comma separated)</label>
-                            <input type="text" class="form-input" id="studentAchievements" placeholder="Academic Excellence, Science Innovation">
-                        </div>
-                        <div style="display:flex;gap:12px;margin-top:10px;">
-                            <button class="btn btn-primary" onclick="saveStudent()">Save Student</button>
-                            <button class="btn btn-secondary" onclick="cancelStudentEditor()">Cancel</button>
-                        </div>
+            <section id="view-event-editor" class="admin-view">
+                <div class="view-head sticky-head">
+                    <div>
+                        <button type="button" class="btn btn-ghost" id="backFromEvent">&larr; Events</button>
+                        <h1 id="eventEditorTitle">New Event</h1>
                     </div>
-                </div>
-            </div>
-
-            <!-- CSE COUNCIL TAB -->
-            <div class="tab-content" id="cseTab">
-                <div class="form-section">
-                    <h3>CSE Council Management</h3>
-                    <p style="font-size:13px;color:#666;margin-bottom:12px;">Assign students to CSE Council positions for each stage. Click "Save" to download the updated events.json file.</p>
-                    
-                    <div class="form-row" style="margin-bottom:20px;">
-                        <div style="flex:1;">
-                            <label class="form-label">Council Head</label>
-                            <select class="form-input" id="cseHeadSelect"><option value="">-- Select --</option></select>
-                        </div>
-                    </div>
-                    
-                    <div class="cse-stage-section">
-                        <h4 style="background:#1a1a1a;color:#fff;padding:12px;border-radius:8px;margin-bottom:16px;">Secondary Stage</h4>
-                        <div class="form-row" style="grid-template-columns:repeat(2,1fr);">
-                            <div><label class="form-label">Stage President Rep</label><select class="form-input cse-select" data-stage="secondary" data-role="president"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Vice President Rep</label><select class="form-input cse-select" data-stage="secondary" data-role="vicePresident"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Science Rep</label><select class="form-input cse-select" data-stage="secondary" data-role="science"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Religious & Culture Rep</label><select class="form-input cse-select" data-stage="secondary" data-role="religiousCulture"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Art Rep</label><select class="form-input cse-select" data-stage="secondary" data-role="art"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Social Rep</label><select class="form-input cse-select" data-stage="secondary" data-role="social"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Sports Rep</label><select class="form-input cse-select" data-stage="secondary" data-role="sports"><option value="">-- Select --</option></select></div>
-                        </div>
-                    </div>
-                    
-                    <div class="cse-stage-section" style="margin-top:24px;">
-                        <h4 style="background:#1B4D3E;color:#fff;padding:12px;border-radius:8px;margin-bottom:16px;">Preparatory Stage</h4>
-                        <div class="form-row" style="grid-template-columns:repeat(2,1fr);">
-                            <div><label class="form-label">Stage President Rep</label><select class="form-input cse-select" data-stage="preparatory" data-role="president"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Vice President Rep</label><select class="form-input cse-select" data-stage="preparatory" data-role="vicePresident"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Science Rep</label><select class="form-input cse-select" data-stage="preparatory" data-role="science"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Religious & Culture Rep</label><select class="form-input cse-select" data-stage="preparatory" data-role="religiousCulture"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Art Rep</label><select class="form-input cse-select" data-stage="preparatory" data-role="art"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Social Rep</label><select class="form-input cse-select" data-stage="preparatory" data-role="social"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Sports Rep</label><select class="form-input cse-select" data-stage="preparatory" data-role="sports"><option value="">-- Select --</option></select></div>
-                        </div>
-                    </div>
-                    
-                    <div class="cse-stage-section" style="margin-top:24px;">
-                        <h4 style="background:#2C5282;color:#fff;padding:12px;border-radius:8px;margin-bottom:16px;">Primary Stage</h4>
-                        <div class="form-row" style="grid-template-columns:repeat(2,1fr);">
-                            <div><label class="form-label">Stage President Rep</label><select class="form-input cse-select" data-stage="primary" data-role="president"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Vice President Rep</label><select class="form-input cse-select" data-stage="primary" data-role="vicePresident"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Science Rep</label><select class="form-input cse-select" data-stage="primary" data-role="science"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Religious & Culture Rep</label><select class="form-input cse-select" data-stage="primary" data-role="religiousCulture"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Art Rep</label><select class="form-input cse-select" data-stage="primary" data-role="art"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Social Rep</label><select class="form-input cse-select" data-stage="primary" data-role="social"><option value="">-- Select --</option></select></div>
-                            <div><label class="form-label">Sports Rep</label><select class="form-input cse-select" data-stage="primary" data-role="sports"><option value="">-- Select --</option></select></div>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-primary" onclick="saveCSECouncil()" style="margin-top:20px;padding:10px 30px;">Save CSE Council</button>
-                </div>
-            </div>
-
-            <!-- JSON TAB -->
-            <div class="tab-content" id="jsonTab">
-                <div class="form-section">
-                    <h3>Events JSON</h3>
-                    <p style="font-size:13px;color:#666;margin-bottom:12px;">Copy or download this JSON to save/export.</p>
-                    <div class="json-panel">
-                        <button class="json-copy-btn" onclick="copyJSON('events')">Copy</button>
-                        <button class="json-copy-btn" style="background:#4CAF50;" onclick="downloadJSON('events')">Download</button>
-                        <pre id="eventsJSON"></pre>
-                    </div>
+                    <button type="button" class="btn btn-primary" id="saveEventButton">Save Event</button>
                 </div>
 
-                <div class="form-section">
-                    <h3>Students JSON</h3>
-                    <p style="font-size:13px;color:#666;margin-bottom:12px;">Copy or download this JSON to save/export.</p>
-                    <div class="json-panel">
-                        <button class="json-copy-btn" onclick="copyJSON('students')">Copy</button>
-                        <button class="json-copy-btn" style="background:#4CAF50;" onclick="downloadJSON('students')">Download</button>
-                        <pre id="studentsJSON"></pre>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Import JSON</h3>
-                    <p style="font-size:13px;color:#666;margin-bottom:12px;">Paste JSON here to load data into the editor.</p>
-                    <div class="form-row">
-                        <div>
-                            <label class="form-label">Import Events</label>
-                            <div class="import-area">
-                                <textarea id="importEventsArea" placeholder='Paste events JSON here...'></textarea>
-                            </div>
-                            <button class="btn btn-primary" onclick="importJSON('events')" style="margin-top:10px;padding:8px 20px;font-size:12px;">Import Events</button>
-                        </div>
-                        <div>
-                            <label class="form-label">Import Students</label>
-                            <div class="import-area">
-                                <textarea id="importStudentsArea" placeholder='Paste students JSON here...'></textarea>
-                            </div>
-                            <button class="btn btn-primary" onclick="importJSON('students')" style="margin-top:10px;padding:8px 20px;font-size:12px;">Import Students</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/data.js"></script>
-    <script>
-        const ADMIN_PASSWORD = 'admin123';
-        let elements = [];
-
-        // --- AUTH ---
-        function checkPassword() {
-            if (document.getElementById('passwordInput').value === ADMIN_PASSWORD) {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                loadAdmin();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-            }
-        }
-        function logout() {
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'block';
-            document.getElementById('passwordInput').value = '';
-        }
-
-        // --- TABS ---
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById(tab + 'Tab').classList.add('active');
-            if (tab === 'json') refreshJSON();
-            if (tab === 'cse') { populateCSESelects(); loadCSECouncil(); }
-        }
-
-        // --- LOAD ---
-        async function loadAdmin() {
-            await DataStore.load();
-            DataStore.getCSECouncil();
-            renderEventsList();
-            renderStudentsList();
-        }
-
-        // ===== EVENTS =====
-        function renderEventsList() {
-            const list = document.getElementById('eventsList');
-            const events = DataStore.getEvents();
-            if (!events.length) { list.innerHTML = '<p style="color:#999;text-align:center;padding:40px;">No events yet. Create one!</p>'; return; }
-            list.innerHTML = events.map((e, i) => `
-                <div class="item-row" draggable="true" data-index="${i}" ondragstart="dragEventStart(event)" ondragover="dragEventOver(event)" ondrop="dropEvent(event)" ondragend="dragEventEnd(event)" style="cursor:grab;">
-                    <div style="padding:0 12px;color:#999;font-size:18px;">☰</div>
-                    <div class="item-info">
-                        <div class="item-title">${e.featured ? '★ ' : ''}${e.title}</div>
-                        <div class="item-meta">${e.category || ''} | ${e.date || ''} | ${(e.elements || []).length} elements</div>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn-edit" onclick="editEvent('${e.id}')">Edit</button>
-                        <button class="btn-delete" onclick="deleteEvent('${e.id}')">Delete</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        let draggedEventIndex = null;
-        
-        function dragEventStart(e) {
-            draggedEventIndex = parseInt(e.target.dataset.index);
-            e.target.style.opacity = '0.5';
-        }
-        
-        function dragEventOver(e) {
-            e.preventDefault();
-        }
-        
-        function dropEvent(e) {
-            e.preventDefault();
-            const targetRow = e.target.closest('[data-index]');
-            if (!targetRow) return;
-            const targetIndex = parseInt(targetRow.dataset.index);
-            
-            if (draggedEventIndex !== null && draggedEventIndex !== targetIndex) {
-                DataStore.reorderEvent(draggedEventIndex, targetIndex);
-                renderEventsList();
-            }
-        }
-        
-        function dragEventEnd(e) {
-            e.target.style.opacity = '1';
-            draggedEventIndex = null;
-        }
-
-        function openEventEditor(eventData) {
-            document.getElementById('eventEditor').style.display = 'block';
-            document.getElementById('eventsList').style.display = 'none';
-            document.querySelector('#eventsTab > div:first-child').style.display = 'none';
-
-            if (eventData) {
-                document.getElementById('editorTitle').textContent = 'Edit Event';
-                document.getElementById('editEventId').value = eventData.id;
-                document.getElementById('eventTitle').value = eventData.title;
-                document.getElementById('eventCategory').value = eventData.category || 'Academic';
-                document.getElementById('eventDate').value = eventData.date || '';
-                document.getElementById('eventFeatured').value = eventData.featured ? 'true' : 'false';
-                elements = JSON.parse(JSON.stringify(eventData.elements || []));
-            } else {
-                document.getElementById('editorTitle').textContent = 'New Event';
-                document.getElementById('editEventId').value = '';
-                document.getElementById('eventTitle').value = '';
-                document.getElementById('eventCategory').value = 'Academic';
-                document.getElementById('eventDate').value = new Date().getFullYear().toString();
-                document.getElementById('eventFeatured').value = 'false';
-                elements = [];
-            }
-            renderElements();
-            updatePreview();
-        }
-
-        function cancelEventEditor() {
-            document.getElementById('eventEditor').style.display = 'none';
-            document.getElementById('eventsList').style.display = 'block';
-            document.querySelector('#eventsTab > div:first-child').style.display = 'flex';
-            elements = [];
-        }
-
-        function editEvent(id) {
-            const event = DataStore.getEvent(id);
-            if (event) openEventEditor(event);
-        }
-
-        function deleteEvent(id) {
-            if (!confirm('Delete this event?')) return;
-            DataStore.deleteEvent(id);
-            renderEventsList();
-        }
-
-        function saveEvent() {
-            const title = document.getElementById('eventTitle').value.trim();
-            if (!title) { alert('Title required'); return; }
-
-            const editId = document.getElementById('editEventId').value;
-            const eventData = {
-                id: editId || DataStore.generateId(title),
-                title: title,
-                type: 'multi',
-                category: document.getElementById('eventCategory').value,
-                featured: document.getElementById('eventFeatured').value === 'true',
-                date: document.getElementById('eventDate').value || new Date().getFullYear().toString(),
-                elements: elements
-            };
-
-            if (editId) {
-                DataStore.updateEvent(editId, eventData);
-            } else {
-                DataStore.addEvent(eventData);
-            }
-
-            cancelEventEditor();
-            renderEventsList();
-        }
-
-        // ===== ELEMENT BUILDER =====
-        function addElement(type) {
-            const el = { type };
-            switch (type) {
-                case 'text': el.content = ''; break;
-                case 'image': el.image = ''; el.align = 'full'; el.caption = ''; break;
-                case 'slideshow': el.images = []; el.caption = ''; break;
-                case 'video': el.video = ''; break;
-                case 'quote': el.quote = ''; el.author = ''; break;
-                case 'students': el.students = []; break;
-                case 'organizers': el.organizers = []; break;
-            }
-            elements.push(el);
-            renderElements();
-            updatePreview();
-        }
-
-        function removeElement(idx) {
-            elements.splice(idx, 1);
-            renderElements();
-            updatePreview();
-        }
-
-        function moveElement(idx, dir) {
-            const newIdx = idx + dir;
-            if (newIdx < 0 || newIdx >= elements.length) return;
-            [elements[idx], elements[newIdx]] = [elements[newIdx], elements[idx]];
-            renderElements();
-            updatePreview();
-        }
-
-        function renderElements() {
-            const list = document.getElementById('elementList');
-            if (!elements.length) {
-                list.innerHTML = '<p style="color:#999;text-align:center;padding:20px;font-size:13px;">No elements yet. Add elements below.</p>';
-                return;
-            }
-            list.innerHTML = elements.map((el, i) => {
-                let fields = '';
-                switch (el.type) {
-                    case 'text':
-                        fields = `<textarea class="form-textarea" style="min-height:80px;" placeholder="Write your text content..." onchange="updateElement(${i},'content',this.value)" oninput="updatePreview()">${el.content || ''}</textarea>`;
-                        break;
-                    case 'image':
-                        fields = `
-                            <div class="image-picker" style="margin-bottom:8px;">
-                                <input type="text" class="form-input" value="${el.image || ''}" placeholder="assets/images/photo.jpg" onchange="updateElement(${i},'image',this.value);updatePreview()">
-                                <label class="btn-edit" style="padding:8px 12px;border-radius:6px;cursor:pointer;white-space:nowrap;">
-                                    Browse<input type="file" accept="image/*" onchange="previewElementImage(this,${i})" style="display:none;">
+                <div class="editor-grid">
+                    <div class="editor-main">
+                        <div class="panel">
+                            <h2>Details</h2>
+                            <input type="hidden" id="eventUuid">
+                            <div class="field-grid">
+                                <label class="field">
+                                    <span>Title *</span>
+                                    <input type="text" id="eventTitle" class="input" required>
+                                </label>
+                                <label class="field">
+                                    <span>Slug</span>
+                                    <input type="text" id="eventSlug" class="input" placeholder="auto-generated-from-title">
+                                </label>
+                                <label class="field">
+                                    <span>Category</span>
+                                    <select id="eventCategory" class="input">
+                                        <option>Academic</option>
+                                        <option>Technology</option>
+                                        <option>Cultural</option>
+                                        <option>Sports</option>
+                                        <option>School</option>
+                                    </select>
+                                </label>
+                                <label class="field">
+                                    <span>Date label</span>
+                                    <input type="text" id="eventDateLabel" class="input" placeholder="e.g. 23 April 2026">
+                                </label>
+                                <label class="field">
+                                    <span>Exact date (optional)</span>
+                                    <input type="date" id="eventDate" class="input">
+                                </label>
+                                <label class="field">
+                                    <span>Status</span>
+                                    <select id="eventStatus" class="input">
+                                        <option value="draft">Draft</option>
+                                        <option value="published">Published</option>
+                                        <option value="archived">Archived</option>
+                                    </select>
+                                </label>
+                                <label class="field checkbox-field">
+                                    <input type="checkbox" id="eventFeatured">
+                                    <span>Featured on the homepage</span>
+                                </label>
+                                <label class="field">
+                                    <span>Sort order</span>
+                                    <input type="number" id="eventSortOrder" class="input" value="0">
                                 </label>
                             </div>
-                            ${el.image ? `<img src="${el.image}" style="max-width:120px;max-height:80px;border-radius:6px;margin-bottom:8px;" onerror="this.style.display='none'">` : ''}
-                            <div style="display:flex;gap:8px;">
-                                <select class="form-select" style="width:auto;" onchange="updateElement(${i},'align',this.value);updatePreview()">
-                                    <option value="full" ${el.align==='full'?'selected':''}>Full Width</option>
-                                    <option value="left" ${el.align==='left'?'selected':''}>Left</option>
-                                    <option value="right" ${el.align==='right'?'selected':''}>Right</option>
-                                </select>
-                                <input type="text" class="form-input" style="flex:1;" value="${el.caption || ''}" placeholder="Caption (optional)" onchange="updateElement(${i},'caption',this.value)">
-                            </div>`;
-                        break;
-                    case 'slideshow':
-                        const slideId = 'admin-slideshow-' + Math.random().toString(36).substr(2, 9);
-                        fields = `
-                            <input type="text" class="form-input" value="${(el.images||[]).join(', ')}" placeholder="assets/images/a.jpg, assets/images/b.jpg" onchange="updateElement(${i},'images',this.value.split(',').map(s=>s.trim()).filter(Boolean));updatePreview()">
-                            <div style="display:flex;gap:8px;margin-top:8px;overflow-x:auto;">
-                                ${(el.images||[]).map((img, idx) => `<img src="${img}" style="width:80px;height:60px;object-fit:cover;border-radius:4px;" onerror="this.style.display='none'" id="${slideId}-${idx}">`).join('')}
-                            </div>
-                            <input type="text" class="form-input" style="margin-top:8px;" value="${el.caption || ''}" placeholder="Caption (optional)" onchange="updateElement(${i},'caption',this.value)">`;
-                        break;
-                    case 'video':
-                        fields = `<input type="text" class="form-input" value="${el.video || ''}" placeholder="YouTube ID(s) - separate multiple with comma for side-by-side" onchange="updateElement(${i},'video',this.value);updatePreview()">`;
-                        break;
-                    case 'quote':
-                        fields = `
-                            <textarea class="form-textarea" style="min-height:60px;" placeholder="The quote text..." onchange="updateElement(${i},'quote',this.value);updatePreview()">${el.quote || ''}</textarea>
-                            <input type="text" class="form-input" style="margin-top:8px;" value="${el.author || ''}" placeholder="Author name" onchange="updateElement(${i},'author',this.value);updatePreview()">`;
-                        break;
-                    case 'students':
-                        const allStudents = DataStore.getStudents();
-                        const studentRows = (el.students || []).map((s, si) => `
-                            <div class="student-picker-item">
-                                <select onchange="updateStudentInElement(${i},${si},'name',this.value);updatePreview()">
-                                    <option value="">Select student...</option>
-                                    ${allStudents.map(st => `<option value="${st.name}" ${st.name===s.name?'selected':''}>${st.name}${st.star?' ★':''}</option>`).join('')}
-                                </select>
-                                <input placeholder="Role" value="${s.role||''}" onchange="updateStudentInElement(${i},${si},'role',this.value)">
-                                <input placeholder="Achievement" value="${s.achievement||''}" onchange="updateStudentInElement(${i},${si},'achievement',this.value)">
-                                <button onclick="removeStudentFromElement(${i},${si})" style="background:#ffebee;color:#c62828;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;">x</button>
-                            </div>
-                        `).join('');
-                        fields = `
-                            <div class="student-picker">
-                                ${studentRows || '<p style="font-size:12px;color:#999;">No students linked yet.</p>'}
-                                <button class="add-element-btn" onclick="addStudentToElement(${i})" style="margin-top:8px;font-size:11px;">+ Link Student</button>
-                            </div>`;
-                        break;
-                    case 'organizers':
-                        const allTeachers = DataStore.getStudents();
-                        const organizerRows = (el.organizers || []).map((s, si) => `
-                            <div class="student-picker-item">
-                                <select onchange="updateOrganizerInElement(${i},${si},'name',this.value);updatePreview()">
-                                    <option value="">Select organizer...</option>
-                                    ${allTeachers.map(st => `<option value="${st.name}" ${st.name===s.name?'selected':''}>${st.name} (${st.type === 'teacher' ? 'Teacher' : st.class || 'Student'})${st.star?' ★':''}</option>`).join('')}
-                                </select>
-                                <input placeholder="Role" value="${s.role||''}" onchange="updateOrganizerInElement(${i},${si},'role',this.value)">
-                                <input placeholder="Achievement" value="${s.achievement||''}" onchange="updateOrganizerInElement(${i},${si},'achievement',this.value)">
-                                <button onclick="removeOrganizerFromElement(${i},${si})" style="background:#ffebee;color:#c62828;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;">x</button>
-                            </div>
-                        `).join('');
-                        fields = `
-                            <div class="student-picker" style="border-color:#DC143C;">
-                                ${organizerRows || '<p style="font-size:12px;color:#999;">No organizers linked yet.</p>'}
-                                <button class="add-element-btn" onclick="addOrganizerToElement(${i})" style="margin-top:8px;font-size:11px;">+ Link Organizer</button>
-                            </div>`;
-                        break;
-                }
-
-                return `
-                    <div class="element-item">
-                        <div class="element-item-header">
-                            <span class="element-type-badge">${el.type}</span>
-                            <div class="element-controls">
-                                <button onclick="moveElement(${i},-1)" title="Move up" ${i===0?'disabled':''}>&#9650;</button>
-                                <button onclick="moveElement(${i},1)" title="Move down" ${i===elements.length-1?'disabled':''}>&#9660;</button>
-                                <button onclick="removeElement(${i})" title="Remove" style="color:#c62828;">&#10005;</button>
+                            <div class="field">
+                                <span>Cover image</span>
+                                <div class="image-field">
+                                    <input type="text" id="eventCoverImage" class="input" placeholder="Upload or paste an image URL">
+                                    <button type="button" class="btn btn-secondary" data-upload-target="eventCoverImage" data-upload-folder="events" data-crop="wide">Upload</button>
+                                </div>
+                                <img id="eventCoverPreview" class="image-preview wide" alt="" hidden>
                             </div>
                         </div>
-                        ${fields}
-                    </div>`;
-            }).join('');
-        }
 
-        function updateElement(idx, key, value) { elements[idx][key] = value; }
-        function updateStudentInElement(elIdx, sIdx, key, value) { elements[elIdx].students[sIdx][key] = value; }
-        function addStudentToElement(idx) { elements[idx].students.push({name:'',role:'',achievement:''}); renderElements(); }
-        function removeStudentFromElement(elIdx, sIdx) { elements[elIdx].students.splice(sIdx, 1); renderElements(); updatePreview(); }
-
-        function updateOrganizerInElement(elIdx, sIdx, key, value) { elements[elIdx].organizers[sIdx][key] = value; }
-        function addOrganizerToElement(idx) { elements[idx].organizers.push({name:'',role:'',achievement:''}); renderElements(); }
-        function removeOrganizerFromElement(elIdx, sIdx) { elements[elIdx].organizers.splice(sIdx, 1); renderElements(); updatePreview(); }
-
-        function previewElementImage(input, idx) {
-            if (input.files && input.files[0]) {
-                const name = input.files[0].name;
-                const path = 'assets/images/' + name;
-                elements[idx].image = path;
-                renderElements();
-                updatePreview();
-            }
-        }
-
-        function previewStudentImage(input) {
-            if (input.files && input.files[0]) {
-                document.getElementById('studentImage').value = 'assets/images/' + input.files[0].name;
-            }
-        }
-
-        // ===== LIVE PREVIEW =====
-        function updatePreview() {
-            const preview = document.getElementById('livePreview');
-            if (!elements.length) { preview.innerHTML = '<p style="color:#999;text-align:center;padding:40px;">Add elements above to see preview</p>'; return; }
-
-            let html = '';
-            elements.forEach(el => {
-                switch (el.type) {
-                    case 'text':
-                        if (el.content) html += `<div class="article-text" style="background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,244,240,0.9) 100%); border-radius: 12px; padding: 24px; margin: 20px 0; border-left: 4px solid var(--primary-gold); box-shadow: 0 2px 8px rgba(0,0,0,0.1);"><p style="font-size:16px;line-height:1.8;color:#333;">${el.content}</p></div>`;
-                        break;
-                    case 'image':
-                        if (el.image) {
-                            if (el.align === 'full') {
-                                html += `<img src="${el.image}" style="width:100%;max-height:300px;object-fit:cover;border-radius:8px;margin-bottom:16px;" onerror="this.style.display='none'">`;
-                            } else {
-                                html += `<div style="display:flex;gap:20px;margin-bottom:16px;${el.align==='right'?'flex-direction:row-reverse;':''}"><img src="${el.image}" style="width:50%;border-radius:8px;object-fit:cover;" onerror="this.style.display='none'"><div>${el.caption||''}</div></div>`;
-                            }
-                        }
-                        break;
-                    case 'slideshow':
-                        if (el.images && el.images.length) {
-                            html += `<div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;">${el.images.map(img => `<img src="${img}" style="height:120px;border-radius:8px;object-fit:contain;background:#f0f0f0;" onerror="this.style.display='none'">`).join('')}</div>`;
-                        }
-                        break;
-                    case 'video':
-                        if (el.video) {
-                            const videoIds = el.video.split(',').map(v => v.trim()).filter(v => v);
-                            if (videoIds.length > 1) {
-                                html += `<div style="display:flex;gap:16px;margin-bottom:16px;">`;
-                                videoIds.forEach(videoSrc => {
-                                    let vs = videoSrc;
-                                    if (vs.includes('youtu.be/')) {
-                                        const videoId = vs.split('youtu.be/')[1].split('?')[0].split('&')[0];
-                                        vs = 'https://www.youtube.com/embed/' + videoId;
-                                    } else if (vs.includes('youtube.com/watch')) {
-                                        try { const url = new URL(vs); const v = url.searchParams.get('v'); if (v) vs = 'https://www.youtube.com/embed/' + v; } catch(e) {}
-                                    } else if (!vs.includes('http')) {
-                                        vs = 'https://www.youtube.com/embed/' + vs;
-                                    }
-                                    html += `<div style="flex:1;position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;"><iframe src="${vs}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
-                                });
-                                html += `</div>`;
-                            } else {
-                                let videoSrc = videoIds[0] || '';
-                                if (videoSrc.includes('youtu.be/')) {
-                                    const videoId = videoSrc.split('youtu.be/')[1].split('?')[0].split('&')[0];
-                                    videoSrc = 'https://www.youtube.com/embed/' + videoId;
-                                } else if (videoSrc.includes('youtube.com/watch')) {
-                                    try {
-                                        const url = new URL(videoSrc);
-                                        const v = url.searchParams.get('v');
-                                        if (v) videoSrc = 'https://www.youtube.com/embed/' + v;
-                                    } catch(e) {}
-                                } else if (videoSrc && !videoSrc.includes('http')) {
-                                    videoSrc = 'https://www.youtube.com/embed/' + videoSrc;
-                                }
-                                html += `<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin-bottom:16px;"><iframe src="${videoSrc}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
-                            }
-                        }
-                        break;
-                    case 'quote':
-                        if (el.quote) html += `<blockquote style="border-left:4px solid var(--primary-gold);padding:16px;margin:16px 0;font-style:italic;background:#f9f9f9;border-radius:0 8px 8px 0;">"${el.quote}"${el.author ? `<footer style="margin-top:8px;font-size:13px;color:#666;">— ${el.author}</footer>` : ''}</blockquote>`;
-                        break;
-                    case 'students':
-                        if (el.students && el.students.length) {
-                            const chips = el.students.filter(s => s.name).map(s => {
-                                const st = DataStore.getStudent(s.name);
-                                return `<span style="display:inline-block;background:var(--primary-gold);padding:4px 12px;border-radius:16px;font-size:12px;font-weight:600;">${s.name}${st?.star?' ★':''}${s.role?' — '+s.role:''}${s.achievement?' — '+s.achievement:''}</span>`;
-                            }).join(' ');
-                            if (chips) html += `<div style="background:rgba(201,168,76,0.15);padding:16px;border-radius:8px;margin-bottom:16px;"><strong style="font-size:12px;display:block;margin-bottom:8px;">STUDENTS</strong><div style="display:flex;flex-wrap:wrap;gap:8px;">${chips}</div></div>`;
-                        }
-                        break;
-                    case 'organizers':
-                        if (el.organizers && el.organizers.length) {
-                            const chips = el.organizers.filter(s => s.name).map(s => {
-                                const st = DataStore.getStudent(s.name);
-                                return `<span style="display:inline-block;background:#DC143C;color:white;padding:4px 12px;border-radius:16px;font-size:12px;font-weight:600;">${s.name}${st?.star?' ★':''}${(s.role||st?.role)?' — '+(s.role||st.role):''}${s.achievement?' — '+s.achievement:''}</span>`;
-                            }).join(' ');
-                            if (chips) html += `<div style="background:rgba(220,20,60,0.15);padding:16px;border-radius:8px;margin-bottom:16px;border-left:4px solid #DC143C;"><strong style="font-size:12px;display:block;margin-bottom:8px;color:#DC143C;">ORGANIZERS / TEACHERS</strong><div style="display:flex;flex-wrap:wrap;gap:8px;">${chips}</div></div>`;
-                        }
-                        break;
-                }
-            });
-            preview.innerHTML = html || '<p style="color:#999;text-align:center;padding:40px;">Add content to elements to see preview</p>';
-        }
-
-        // ===== STUDENTS =====
-        function renderStudentsList() {
-            const list = document.getElementById('studentsList');
-            const search = (document.getElementById('studentSearch')?.value || '').toLowerCase();
-            let students = DataStore.getStudents();
-            if (search) students = students.filter(s => s.name.toLowerCase().includes(search));
-            if (!students.length) { list.innerHTML = '<p style="color:#999;text-align:center;padding:40px;">No students found.</p>'; return; }
-            list.innerHTML = students.map(s => `
-                <div class="item-row">
-                    <img src="${s.image || ''}" alt="${s.name}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;margin-right:12px;border:2px solid var(--primary-gold);" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2750%27 height=%2750%27%3E%3Ccircle cx=%2725%27 cy=%2725%27 r=%2725%27 fill=%27%23ddd%27/%3E%3C/svg%3E'">
-                    <div class="item-info">
-                        <div class="item-title">${s.star ? '★ ' : ''}${s.name}</div>
-                        <div class="item-meta">${s.type === 'teacher' ? 'Teacher' : s.class || 'Student'} | ${s.role || ''}</div>
+                        <div class="panel">
+                            <div class="panel-head">
+                                <h2>Article elements</h2>
+                                <div class="element-actions">
+                                    <button type="button" class="chip-btn" data-add-element="text">+ Text</button>
+                                    <button type="button" class="chip-btn" data-add-element="image">+ Image</button>
+                                    <button type="button" class="chip-btn" data-add-element="slideshow">+ Slideshow</button>
+                                    <button type="button" class="chip-btn" data-add-element="video">+ Video</button>
+                                    <button type="button" class="chip-btn" data-add-element="quote">+ Quote</button>
+                                    <button type="button" class="chip-btn" data-add-element="students">+ Students</button>
+                                    <button type="button" class="chip-btn danger" data-add-element="organizers">+ Organizers</button>
+                                </div>
+                            </div>
+                            <div id="elementList" class="element-list"></div>
+                        </div>
                     </div>
-                    <div class="item-actions">
-                        <button class="btn-star ${s.star?'active':''}" onclick="toggleStar('${s.id}')" title="Toggle star">${s.star?'★':'☆'}</button>
-                        <button class="btn-edit" onclick="editStudent('${s.id}')">Edit</button>
-                        <button class="btn-delete" onclick="deleteStudent('${s.id}')">Delete</button>
+
+                    <aside class="editor-side">
+                        <div class="panel">
+                            <h2>SEO &amp; social</h2>
+                            <label class="field">
+                                <span>SEO title</span>
+                                <input type="text" id="eventSeoTitle" class="input" maxlength="70">
+                            </label>
+                            <label class="field">
+                                <span>SEO description</span>
+                                <textarea id="eventSeoDescription" class="input" rows="3" maxlength="160"></textarea>
+                            </label>
+                            <label class="field">
+                                <span>Social image</span>
+                                <input type="text" id="eventOgImage" class="input" placeholder="Defaults to cover image">
+                            </label>
+                            <div class="seo-preview" id="eventSeoPreview"></div>
+                        </div>
+                        <div class="panel">
+                            <h2>Live preview</h2>
+                            <div id="eventPreview" class="article-preview"></div>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <section id="view-students" class="admin-view">
+                <div class="view-head">
+                    <div>
+                        <h1>Students</h1>
+                        <p class="muted" id="studentsSummary">Loading…</p>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="newStudentButton">+ New Student</button>
+                </div>
+                <div class="toolbar">
+                    <input type="search" id="studentSearch" class="input" placeholder="Search students…" aria-label="Search students">
+                    <select id="studentTypeFilter" class="input" aria-label="Filter students">
+                        <option value="active">Active</option>
+                        <option value="student">Students</option>
+                        <option value="teacher">Teachers</option>
+                        <option value="star">Stars</option>
+                        <option value="top">Top students</option>
+                        <option value="deleted">Deleted</option>
+                        <option value="all">All</option>
+                    </select>
+                    <select id="studentClassFilter" class="input" aria-label="Filter by class">
+                        <option value="">All classes</option>
+                        <option>Primary</option>
+                        <option>Preparatory</option>
+                        <option>Secondary</option>
+                    </select>
+                    <select id="studentSort" class="input" aria-label="Sort students">
+                        <option value="order">Manual order</option>
+                        <option value="name">Name A–Z</option>
+                        <option value="class">Class</option>
+                    </select>
+                </div>
+                <div id="studentsList" class="admin-list" aria-live="polite"></div>
+                <div id="studentsPager" class="pager"></div>
+            </section>
+
+            <section id="view-student-editor" class="admin-view">
+                <div class="view-head sticky-head">
+                    <div>
+                        <button type="button" class="btn btn-ghost" id="backFromStudent">&larr; Students</button>
+                        <h1 id="studentEditorTitle">New Student</h1>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="saveStudentButton">Save Student</button>
+                </div>
+                <div class="panel">
+                    <input type="hidden" id="studentUuid">
+                    <div class="field-grid">
+                        <label class="field">
+                            <span>Name *</span>
+                            <input type="text" id="studentName" class="input" required>
+                        </label>
+                        <label class="field">
+                            <span>Slug</span>
+                            <input type="text" id="studentSlug" class="input" placeholder="auto-generated-from-name">
+                        </label>
+                        <label class="field">
+                            <span>Role</span>
+                            <input type="text" id="studentRole" class="input" placeholder="e.g. Editor, President">
+                        </label>
+                        <label class="field">
+                            <span>Type</span>
+                            <select id="studentType" class="input">
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Class</span>
+                            <select id="studentClass" class="input">
+                                <option value="">None / teacher</option>
+                                <option>Primary</option>
+                                <option>Preparatory</option>
+                                <option>Secondary</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Sort order</span>
+                            <input type="number" id="studentSortOrder" class="input" value="0">
+                        </label>
+                        <label class="field checkbox-field">
+                            <input type="checkbox" id="studentStar">
+                            <span>Star student</span>
+                        </label>
+                        <label class="field checkbox-field">
+                            <input type="checkbox" id="studentTop">
+                            <span>Top student</span>
+                        </label>
+                        <label class="field">
+                            <span>Top student label</span>
+                            <input type="text" id="studentTopRole" class="input" placeholder="e.g. Math Genius">
+                        </label>
+                    </div>
+                    <label class="field">
+                        <span>Quote</span>
+                        <textarea id="studentQuote" class="input" rows="3"></textarea>
+                    </label>
+                    <label class="field">
+                        <span>Achievements (one per line or comma separated)</span>
+                        <textarea id="studentAchievements" class="input" rows="3" placeholder="Academic Excellence&#10;Science Innovation"></textarea>
+                    </label>
+                    <div class="field">
+                        <span>Photo</span>
+                        <div class="image-field">
+                            <input type="text" id="studentImage" class="input" placeholder="Upload or paste an image URL">
+                            <button type="button" class="btn btn-secondary" data-upload-target="studentImage" data-upload-folder="students" data-crop="square">Upload</button>
+                        </div>
+                        <img id="studentImagePreview" class="image-preview avatar" alt="" hidden>
                     </div>
                 </div>
-            `).join('');
-        }
+            </section>
 
-        function openStudentEditor(studentData) {
-            document.getElementById('studentEditor').style.display = 'block';
-            document.getElementById('studentsList').style.display = 'none';
-            document.querySelector('#studentsTab > div:first-child').style.display = 'none';
+            <section id="view-cse" class="admin-view">
+                <div class="view-head">
+                    <div>
+                        <h1>CSE Council</h1>
+                        <p class="muted">Assign a student to each position.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="saveCseButton">Save Council</button>
+                </div>
+                <div class="panel">
+                    <label class="field">
+                        <span>Council head</span>
+                        <select id="cseHead" class="input"></select>
+                    </label>
+                </div>
+                <div id="cseStages" class="cse-stages"></div>
+            </section>
 
-            if (studentData) {
-                document.getElementById('studentEditorTitle').textContent = 'Edit Student';
-                document.getElementById('editStudentId').value = studentData.id;
-                document.getElementById('studentName').value = studentData.name;
-                document.getElementById('studentRole').value = studentData.role || '';
-                document.getElementById('studentQuote').value = studentData.quote || '';
-                document.getElementById('studentImage').value = studentData.image || '';
-                document.getElementById('studentType').value = studentData.type || 'student';
-                document.getElementById('studentClass').value = studentData.class || 'Secondary';
-                document.getElementById('studentStar').value = studentData.star ? 'true' : 'false';
-                document.getElementById('studentAchievements').value = (studentData.achievements || []).join(', ');
-                
-                const topStudent = (DataStore.topStudents || []).find(ts => ts.name === studentData.name);
-                document.getElementById('studentTopStudent').value = topStudent ? 'true' : 'false';
-                document.getElementById('studentTopRole').value = topStudent ? topStudent.role : '';
-                document.getElementById('topStudentRoleGroup').style.display = topStudent ? 'block' : 'none';
-                document.getElementById('studentTopStudent').onchange = function() {
-                    document.getElementById('topStudentRoleGroup').style.display = this.value === 'true' ? 'block' : 'none';
-                };
-            } else {
-                document.getElementById('studentEditorTitle').textContent = 'New Student';
-                document.getElementById('editStudentId').value = '';
-                document.getElementById('studentName').value = '';
-                document.getElementById('studentRole').value = '';
-                document.getElementById('studentQuote').value = '';
-                document.getElementById('studentImage').value = '';
-                document.getElementById('studentClass').value = 'Secondary';
-                document.getElementById('studentStar').value = 'false';
-                document.getElementById('studentAchievements').value = '';
-                document.getElementById('studentTopStudent').value = 'false';
-                document.getElementById('studentTopRole').value = '';
-                document.getElementById('topStudentRoleGroup').style.display = 'none';
-            }
-        }
+            <section id="view-settings" class="admin-view">
+                <div class="view-head">
+                    <div>
+                        <h1>Site Settings</h1>
+                        <p class="muted">Homepage copy, links, and social previews.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="saveSettingsButton">Save Settings</button>
+                </div>
+                <div id="settingsForm" class="settings-grid"></div>
+            </section>
 
-        function cancelStudentEditor() {
-            document.getElementById('studentEditor').style.display = 'none';
-            document.getElementById('studentsList').style.display = 'block';
-            document.querySelector('#studentsTab > div:first-child').style.display = 'flex';
-        }
+            <section id="view-audit" class="admin-view">
+                <div class="view-head">
+                    <div>
+                        <h1>Audit Log</h1>
+                        <p class="muted">Recent changes. Deleted items can be restored.</p>
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="refreshAuditButton">Refresh</button>
+                </div>
+                <div id="auditList" class="admin-list" aria-live="polite"></div>
+            </section>
 
-        function editStudent(id) {
-            const student = DataStore.getStudentById(id);
-            if (student) openStudentEditor(student);
-        }
+            <section id="view-export" class="admin-view">
+                <div class="view-head">
+                    <div>
+                        <h1>Export</h1>
+                        <p class="muted">Download a JSON backup of the current content.</p>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="button-row">
+                        <button type="button" class="btn btn-primary" id="downloadEventsButton">Download events.json</button>
+                        <button type="button" class="btn btn-secondary" id="downloadStudentsButton">Download students.json</button>
+                        <button type="button" class="btn btn-secondary" id="copyExportButton">Copy all JSON</button>
+                    </div>
+                    <pre id="exportPreview" class="code-block"></pre>
+                </div>
+            </section>
+        </main>
 
-        function deleteStudent(id) {
-            if (!confirm('Delete this student?')) return;
-            DataStore.deleteStudent(id);
-            renderStudentsList();
-        }
+        <nav class="admin-bottom-nav" aria-label="Admin sections">
+            <button type="button" class="bottom-link active" data-view="events">Events</button>
+            <button type="button" class="bottom-link" data-view="students">Students</button>
+            <button type="button" class="bottom-link" data-view="cse">CSE</button>
+            <button type="button" class="bottom-link" data-view="settings">Settings</button>
+            <button type="button" class="bottom-link" data-view="audit">Audit</button>
+        </nav>
+    </div>
 
-        function toggleStar(id) {
-            const student = DataStore.getStudentById(id);
-            if (student) {
-                student.star = !student.star;
-                DataStore.updateStudent(id, student);
-                renderStudentsList();
-            }
-        }
+    <div id="modalRoot"></div>
 
-        function saveStudent() {
-            const name = document.getElementById('studentName').value.trim();
-            if (!name) { alert('Name required'); return; }
-
-            const editId = document.getElementById('editStudentId').value;
-            const achText = document.getElementById('studentAchievements').value;
-            const studentData = {
-                id: editId || DataStore.generateId(name),
-                name: name,
-                role: document.getElementById('studentRole').value,
-                quote: document.getElementById('studentQuote').value,
-                image: document.getElementById('studentImage').value,
-                star: document.getElementById('studentStar').value === 'true',
-                type: document.getElementById('studentType').value,
-                class: document.getElementById('studentClass').value,
-                achievements: achText ? achText.split(',').map(s => s.trim()).filter(Boolean) : []
-            };
-
-            if (editId) {
-                DataStore.updateStudent(editId, studentData);
-            } else {
-                DataStore.addStudent(studentData);
-            }
-            
-            const isTop = document.getElementById('studentTopStudent').value === 'true';
-            const topRole = document.getElementById('studentTopRole').value;
-            DataStore.topStudents = DataStore.topStudents || [];
-            const idx = DataStore.topStudents.findIndex(ts => ts.name === name);
-            if (isTop) {
-                if (idx >= 0) DataStore.topStudents[idx] = { name, role: topRole || 'Top Student' };
-                else DataStore.topStudents.push({ name, role: topRole || 'Top Student' });
-            } else if (idx >= 0) {
-                DataStore.topStudents.splice(idx, 1);
-            }
-
-            cancelStudentEditor();
-            renderStudentsList();
-            
-            // Download updated students.json
-            const jsonStr = JSON.stringify({ ...DataStore.students, topStudents: DataStore.topStudents }, null, 2);
-            const blob = new Blob([jsonStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'students.json';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-        
-        // ===== CSE COUNCIL =====
-        function populateCSESelects() {
-            const students = DataStore.getStudents().filter(s => s.type === 'student');
-            document.querySelectorAll('.cse-select').forEach(select => {
-                const currentVal = select.value;
-                select.innerHTML = '<option value="">-- Select --</option>' + 
-                    students.map(st => `<option value="${st.name}">${st.name}${st.star ? ' ★' : ''}</option>`).join('');
-                select.value = currentVal;
-            });
-        }
-        
-        function loadCSECouncil() {
-            const council = DataStore.getCSECouncil();
-            const headName = council.head || 'Miss Somia';
-            const headSelect = document.getElementById('cseHeadSelect');
-            const students = DataStore.getStudents();
-            headSelect.innerHTML = '<option value="">-- Select --</option>' + 
-                students.map(st => `<option value="${st.name}">${st.name}</option>`).join('');
-            headSelect.value = headName;
-            document.querySelectorAll('.cse-select').forEach(select => {
-                const stage = select.dataset.stage;
-                const role = select.dataset.role;
-                select.value = council.stages[stage][role] || '';
-            });
-        }
-        
-        function saveCSECouncil() {
-            // Get current events.json
-            const eventsData = DataStore.events;
-            if (!eventsData.cseCouncil) {
-                eventsData.cseCouncil = {
-                    head: "Miss Somia",
-                    stages: { secondary: {}, preparatory: {}, primary: {} }
-                };
-            }
-            
-            // Update head
-            eventsData.cseCouncil.head = document.getElementById('cseHeadSelect').value || "Miss Somia";
-            
-            // Update positions
-            document.querySelectorAll('.cse-select').forEach(select => {
-                const stage = select.dataset.stage;
-                const role = select.dataset.role;
-                eventsData.cseCouncil.stages[stage] = eventsData.cseCouncil.stages[stage] || {};
-                eventsData.cseCouncil.stages[stage][role] = select.value;
-            });
-            
-            // Download updated events.json
-            const jsonStr = JSON.stringify(eventsData, null, 2);
-            const blob = new Blob([jsonStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'events.json';
-            a.click();
-            URL.revokeObjectURL(url);
-            
-            alert('CSE Council saved! Downloaded events.json - replace the file in data/ folder.');
-        }
-
-        // ===== JSON =====
-        function refreshJSON() {
-            document.getElementById('eventsJSON').textContent = DataStore.getEventsJSON();
-            document.getElementById('studentsJSON').textContent = DataStore.getStudentsJSON();
-        }
-
-        function copyJSON(type) {
-            const text = type === 'events' ? DataStore.getEventsJSON() : DataStore.getStudentsJSON();
-            navigator.clipboard.writeText(text).then(() => {
-                const btns = document.querySelectorAll('.json-copy-btn');
-                const btn = type === 'events' ? btns[0] : btns[1];
-                btn.textContent = 'Copied!';
-                btn.classList.add('copied');
-                setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
-            });
-        }
-
-        function downloadJSON(type) {
-            const text = type === 'events' ? DataStore.getEventsJSON() : DataStore.getStudentsJSON();
-            const filename = type === 'events' ? 'events.json' : 'students.json';
-            const blob = new Blob([text], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function importJSON(type) {
-            const area = document.getElementById(type === 'events' ? 'importEventsArea' : 'importStudentsArea');
-            const text = area.value.trim();
-            if (!text) { alert('Paste JSON first'); return; }
-
-            try {
-                if (type === 'events') {
-                    DataStore.importEvents(text);
-                    renderEventsList();
-                } else {
-                    DataStore.importStudents(text);
-                    renderStudentsList();
-                }
-                area.value = '';
-                alert(type.charAt(0).toUpperCase() + type.slice(1) + ' imported successfully!');
-            } catch (err) {
-                alert('Invalid JSON: ' + err.message);
-            }
-        }
-
-        document.getElementById('passwordInput').focus();
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/admin.js"></script>
 </body>
 </html>

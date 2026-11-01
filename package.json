@@ -1,0 +1,19 @@
+{
+  "name": "rising-times-magazine",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The Rising Times school magazine, backed by Supabase.",
+  "scripts": {
+    "serve": "npx --yes serve -l 4173 .",
+    "supabase:link": "npx supabase link --project-ref $SUPABASE_PROJECT_REF",
+    "supabase:push": "npx supabase db push",
+    "supabase:status": "npx supabase status",
+    "migrate:data": "node --env-file=.env.local scripts/migrate-to-supabase.mjs",
+    "setup:editor": "node --env-file=.env.local scripts/setup-editor.mjs",
+    "check": "node --check js/data.js && node --check js/utils.js && node --check js/admin.js && node --check scripts/migrate-to-supabase.mjs && node --check scripts/setup-editor.mjs"
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "^2.45.4"
+  }
+}

@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Profile - Rising Stars Magazine</title>
-    <meta name="description" content="Read the latest news, achievements, and event coverage from Rising Stars Language School. Student stories, competitions, cultural events and more.">
+    <meta name="description" content="Student profile from Rising Stars Language School.">
+    <meta name="robots" content="noindex, follow">
     <meta property="og:title" content="Student Profile - Rising Stars Magazine">
-    <meta property="og:description" content="Stay updated with the latest news and achievements from Rising Stars Language School.">
+    <meta property="og:description" content="Student profile from Rising Stars Language School.">
     <meta property="og:url" content="https://therisingtimes.vercel.app/">
     <meta property="og:image" content="https://therisingtimes.vercel.app/assets/images/logo1.png">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="profile">
     <link rel="stylesheet" href="css/style.css">
     <link rel="shortcut icon" type="image/png" href="assets/images/decorative.png?v=1">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/images/decorative.png?v=1">
@@ -43,14 +44,14 @@
 
     <nav class="navbar">
         <div class="container flex justify-between items-center">
-            <a href="index.html" class="logo"><img src="assets/images/logo.png" alt="Logo"></a>
+            <a href="index.html" class="logo"><img src="assets/images/logo.png" alt="The Rising Times logo"></a>
             <a href="javascript:void(0)" onclick="window.history.back()" class="btn btn-primary" style="padding:8px 16px;font-size:12px;">&larr; Back</a>
         </div>
     </nav>
 
     <div class="profile-header">
         <img src="" alt="Student" id="profileImage" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27180%27%3E%3Ccircle cx=%2790%27 cy=%2790%27 r=%2790%27 fill=%27%23ddd%27/%3E%3C/svg%3E'">
-        <h1 id="profileName">Loading...</h1>
+        <h1 id="profileName">Loading…</h1>
         <p class="role" id="profileRole"></p>
         <div id="profileAchievements"></div>
     </div>
@@ -59,7 +60,7 @@
         <div class="profile-quote" id="profileQuote"></div>
         <div class="events-section">
             <h2>Events</h2>
-            <div id="eventsList"></div>
+            <div id="eventsList"><div class="loading-block" role="status">Loading events…</div></div>
         </div>
     </div>
 
@@ -71,92 +72,124 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/data.js"></script>
     <script>
-        const studentName = new URLSearchParams(window.location.search).get('name') || '';
+        const studentKey = Utils.queryParam('slug') || Utils.queryParam('name') || Utils.queryParam('id');
 
-        async function init() {
-            await DataStore.load();
-            DataStore.getCSECouncil();
-            loadProfile();
-        }
+        function renderProfile(student) {
+            document.title = `${student.name} | The Rising Times`;
+            document.getElementById('profileName').innerHTML = `${Utils.escapeHtml(student.name)}${student.star && student.type === 'student' ? ' <span class="star-badge">★ Star</span>' : ''}`;
+            document.getElementById('profileRole').textContent = student.role || '';
+            document.getElementById('profileQuote').textContent = student.quote ? `"${student.quote}"` : '';
+            document.getElementById('profileImage').src = student.image || '';
+            document.getElementById('profileImage').alt = student.name;
 
-        function loadProfile() {
-            const student = DataStore.getStudent(studentName);
-            if (!student) {
-                document.getElementById('profileName').textContent = studentName || 'Student Not Found';
-                document.getElementById('eventsList').innerHTML = '<p>No student found.</p>';
+            const achievements = (student.achievements || [])
+                .map((achievement) => `<span class="achievement-tag">${Utils.escapeHtml(achievement)}</span>`)
+                .join('');
+            document.getElementById('profileAchievements').innerHTML = achievements
+                ? `<div class="profile-achievements">${achievements}</div>`
+                : '';
+
+            const events = DataStore.getStudentEvents(student);
+            const eventsList = document.getElementById('eventsList');
+            if (!events.length) {
+                eventsList.innerHTML = '<p class="empty-state">No events found for this student yet.</p>';
                 return;
             }
 
-            document.getElementById('profileName').innerHTML = student.name + (student.star && student.type === 'student' ? ' <span class="star-badge">★ Star</span>' : '');
-            document.getElementById('profileRole').textContent = student.role || '';
-            document.getElementById('profileQuote').textContent = '"' + student.quote + '"';
-            document.getElementById('profileImage').src = student.image || '';
-            
-            const achievementsHtml = student.achievements && student.achievements.length 
-                ? `<div class="profile-achievements">${student.achievements.map(a => `<span class="achievement-tag">${a}</span>`).join('')}</div>`
-                : '';
-            document.getElementById('profileAchievements').innerHTML = achievementsHtml;
+            eventsList.innerHTML = events
+                .map((event) => {
+                    const isCSE = Boolean(event._isCSE);
+                    const isTopStudent = Boolean(event._isTopStudent);
+                    const cseRole = event._cseRole || {};
+                    const topRole = event._topRole || {};
+                    const roleTitle = isTopStudent ? topRole.title : cseRole.title || 'CSE Council Member';
+                    const roleIcon = isTopStudent ? topRole.icon : cseRole.icon || '👑';
+                    const accentColor = isTopStudent ? '#D4AF37' : isCSE ? '#9B59B6' : '#DC143C';
 
-            const studentEvents = DataStore.getStudentEvents(studentName);
-            const eventsList = document.getElementById('eventsList');
-
-            if (studentEvents.length > 0) {
-                eventsList.innerHTML = studentEvents.map(event => {
-                    const excerpt = DataStore.getEventExcerpt(event);
-                    const thumb = DataStore.getEventPreviewImage(event);
-                    
-                    let studentInfo = null;
+                    let person = null;
                     let foundAsOrganizer = false;
-                    if (event.elements) {
-                        for (const el of event.elements) {
-                            if (el.type === 'students' && el.students) {
-                                studentInfo = el.students.find(s => s.name === studentName);
-                                if (studentInfo) break;
-                            }
-                            if (el.type === 'organizers' && el.organizers) {
-                                studentInfo = el.organizers.find(s => s.name === studentName);
-                                if (studentInfo) { foundAsOrganizer = true; break; }
+                    for (const element of event.elements || []) {
+                        if (element.type === 'students' && element.students) {
+                            person = element.students.find(
+                                (item) =>
+                                    (student.uuid && item.student_id === student.uuid) ||
+                                    item.name?.toLowerCase() === student.name.toLowerCase()
+                            );
+                            if (person) break;
+                        }
+                        if (element.type === 'organizers' && element.organizers) {
+                            person = element.organizers.find(
+                                (item) =>
+                                    (student.uuid && item.student_id === student.uuid) ||
+                                    item.name?.toLowerCase() === student.name.toLowerCase()
+                            );
+                            if (person) {
+                                foundAsOrganizer = true;
+                                break;
                             }
                         }
                     }
-                    
-                    const st = DataStore.getStudent(studentName);
-                    const roleText = studentInfo?.role ? studentInfo.role : (foundAsOrganizer ? (st?.role || 'Teacher') : 'Participant');
-                    const achieveText = studentInfo?.achievement ? `- ${studentInfo.achievement}` : '';
-                    const isCSE = event._isCSE;
-                    const isTopStudent = event._isTopStudent;
-                    const cseRole = event._cseRole || {};
-                    const topRole = event._topRole || {};
-                    const roleTitle = isTopStudent ? topRole.title : (cseRole.title || 'CSE Council Member');
-                    const roleIcon = isTopStudent ? topRole.icon : (cseRole.icon || '👑');
-                    const isSpecial = isCSE || isTopStudent;
-                    const onclickAttr = isCSE ? "window.location.href='cse-council.html'" : (isTopStudent ? "viewArticle('top-students-competition')" : "viewArticle('" + event.id + "')");
-                    const excerptText = isTopStudent ? 'Recognized for outstanding achievement' : (isCSE ? 'Cultural, Scientific & Educational Council' : excerpt);
-                    const accentColor = isTopStudent ? '#D4AF37' : (isCSE ? '#9B59B6' : '#DC143C');
-                    const thumbHtml = isCSE ? `<div style="width:60px;height:45px;min-width:60px;background:linear-gradient(135deg, #9B59B6, #8E44AD);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;">${roleIcon}</div>` : 
-                                       (isTopStudent ? `<div style="width:60px;height:45px;min-width:60px;background:linear-gradient(135deg, #D4AF37, #B8860B);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;">${roleIcon}</div>` : 
-                                       (thumb ? `<img src="${thumb}" style="width:60px;height:45px;object-fit:cover;border-radius:8px;flex-shrink:0;" onerror="this.style.display='none'">` : ''));
+
+                    const roleText = person?.role || (foundAsOrganizer ? student.role || 'Teacher' : 'Participant');
+                    const achievementText = person?.achievement ? ` - ${person.achievement}` : '';
+                    const excerpt = isTopStudent
+                        ? 'Recognized for outstanding achievement'
+                        : isCSE
+                          ? 'Cultural, Scientific & Educational Council'
+                          : DataStore.getEventExcerpt(event);
+                    const thumb = DataStore.getEventPreviewImage(event);
+                    const thumbHtml = isCSE
+                        ? `<div style="width:60px;height:45px;min-width:60px;background:linear-gradient(135deg, #9B59B6, #8E44AD);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;">${roleIcon}</div>`
+                        : isTopStudent
+                          ? `<div style="width:60px;height:45px;min-width:60px;background:linear-gradient(135deg, #D4AF37, #B8860B);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;">${roleIcon}</div>`
+                          : thumb
+                            ? `<img src="${Utils.escapeAttr(thumb)}" alt="" style="width:60px;height:45px;object-fit:cover;border-radius:8px;flex-shrink:0;" loading="lazy" onerror="this.style.display='none'">`
+                            : '';
+                    const clickTarget = isCSE
+                        ? "window.location.href='cse-council.html'"
+                        : isTopStudent
+                          ? "window.location.href='top-students.html'"
+                          : `viewArticle('${Utils.escapeAttr(event.id)}')`;
+
                     return `
-                        <div class="event-mini ${isCSE ? 'cse-event-mini' : ''} ${isTopStudent ? 'top-student-event-mini' : ''}" onclick="${onclickAttr}">
+                        <div class="event-mini ${isCSE ? 'cse-event-mini' : ''} ${isTopStudent ? 'top-student-event-mini' : ''}" onclick="${clickTarget}">
                             <div style="display:flex;gap:16px;align-items:flex-start;">
                                 ${thumbHtml}
                                 <div style="flex:1;">
-                                    <div class="event-mini-title">${event.title}</div>
-                                    <div style="font-size:11px;color:${accentColor};font-weight:600;margin:3px 0;">${isSpecial ? roleTitle : roleText + ' ' + achieveText}</div>
-                                    <div class="event-mini-excerpt" style="font-size:10px;">${excerptText}</div>
+                                    <div class="event-mini-title">${Utils.escapeHtml(event.title)}</div>
+                                    <div style="font-size:11px;color:${accentColor};font-weight:600;margin:3px 0;">${Utils.escapeHtml(isCSE || isTopStudent ? roleTitle : `${roleText}${achievementText}`)}</div>
+                                    <div class="event-mini-excerpt" style="font-size:10px;">${Utils.escapeHtml(excerpt)}</div>
                                 </div>
                             </div>
                         </div>`;
-                }).join('');
-            } else {
-                eventsList.innerHTML = '<p>No events found for this student.</p>';
-            }
+                })
+                .join('');
         }
 
         function viewArticle(id) {
-            window.location.href = 'article.html?id=' + id;
+            window.location.href = `article.html?id=${encodeURIComponent(id)}`;
+        }
+
+        async function init() {
+            try {
+                await DataStore.load();
+                const student = DataStore.getStudent(studentKey);
+                if (!student) {
+                    document.getElementById('profileName').textContent = 'Student Not Found';
+                    document.getElementById('eventsList').innerHTML = '<p class="empty-state">No student found.</p>';
+                    return;
+                }
+                renderProfile(student);
+            } catch (error) {
+                document.getElementById('profileName').textContent = 'Could Not Load Profile';
+                document.getElementById('eventsList').innerHTML = `<p class="error-state">${Utils.escapeHtml(error.message)}</p>`;
+            }
         }
 
         init();

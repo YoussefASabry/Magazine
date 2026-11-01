@@ -9,7 +9,7 @@
     <meta property="og:description" content="Stay updated with the latest news and achievements from Rising Stars Language School.">
     <meta property="og:url" content="https://therisingtimes.vercel.app/">
     <meta property="og:image" content="https://therisingtimes.vercel.app/assets/images/logo1.png">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="article">
     <link rel="stylesheet" href="css/style.css">
     <link rel="shortcut icon" type="image/png" href="assets/images/decorative.png?v=1">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/images/decorative.png?v=1">
@@ -30,7 +30,7 @@
         .slideshow-images { display: flex; transition: transform 0.5s ease; overflow: hidden; border-radius: 12px; background: #f0f0f0; width: 100%; }
         .slideshow-images img { width: 100%; height: auto; max-height: 500px; object-fit: contain; flex-shrink: 0; background: transparent; }
         .slideshow-nav { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-        .slideshow-dot { width: 12px; height: 12px; border-radius: 50%; background: #ddd; cursor: pointer; transition: var(--transition); }
+        .slideshow-dot { width: 12px; height: 12px; border-radius: 50%; background: #ddd; cursor: pointer; border: none; padding: 0; transition: var(--transition); }
         .slideshow-dot.active { background: var(--primary-gold); }
         .slideshow-arrows { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 10px; pointer-events: none; }
         .slideshow-arrow { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.9); border: none; cursor: pointer; font-size: 18px; pointer-events: auto; transition: var(--transition); }
@@ -62,8 +62,10 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .article-text p { font-size: 16px; line-height: 1.8; color: #333; }
-        @media (max-width: 768px) { 
-            .article-image-text { grid-template-columns: 1fr; } 
+        .article-text ul, .article-text ol { margin: 12px 0 12px 22px; line-height: 1.8; color: #333; }
+        .article-text h2, .article-text h3 { margin: 20px 0 10px; }
+        @media (max-width: 768px) {
+            .article-image-text { grid-template-columns: 1fr; }
             .article-image-text.reverse { direction: ltr; }
             .article-students, .article-organizers { padding: 12px; }
             .article-students h3, .article-organizers h3 { font-size: 12px; margin-bottom: 12px; }
@@ -82,17 +84,19 @@
 
     <nav class="navbar">
         <div class="container flex justify-between items-center">
-            <a href="index.html" class="logo"><img src="assets/images/logo.png" alt="Logo"></a>
+            <a href="index.html" class="logo"><img src="assets/images/logo.png" alt="The Rising Times logo"></a>
             <a href="javascript:void(0)" onclick="window.history.back()" class="btn btn-primary" style="padding:8px 16px;font-size:12px;">&larr; Back</a>
         </div>
     </nav>
 
     <article>
         <div class="article-header">
-            <h1 id="articleTitle">Loading...</h1>
+            <h1 id="articleTitle">Loading…</h1>
             <p class="article-meta" id="articleMeta">Published in The Rising Times News</p>
         </div>
-        <div class="article-content" id="articleContent"></div>
+        <div class="article-content" id="articleContent">
+            <div class="loading-block" role="status">Loading article…</div>
+        </div>
     </article>
 
     <footer class="footer">
@@ -103,195 +107,243 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/data.js"></script>
     <script>
-        const articleId = new URLSearchParams(window.location.search).get('id') || '';
+        const articleId = Utils.queryParam('id');
 
-        async function init() {
-            await DataStore.load();
-            loadArticle();
+        function setMeta(attribute, name, content) {
+            if (!content) return;
+            let tag = document.querySelector(`meta[${attribute}="${name}"]`);
+            if (!tag) {
+                tag = document.createElement('meta');
+                tag.setAttribute(attribute, name);
+                document.head.appendChild(tag);
+            }
+            tag.setAttribute('content', content);
         }
 
-        function loadArticle() {
-            const article = DataStore.getEvent(articleId);
-            if (!article) {
-                document.getElementById('articleTitle').textContent = 'Article Not Found';
-                document.getElementById('articleContent').innerHTML = '<p>The requested article could not be found.</p>';
-                return;
+        function renderPersonCard(person, isOrganizer = false) {
+            const student = DataStore.getStudent(person.slug || person.name);
+            const name = person.name || student?.name || 'Student';
+            const image = person.image || student?.image || '';
+            const role = person.role || student?.role || (isOrganizer ? 'Teacher' : 'Student');
+            const achievement = person.achievement ? ` - ${person.achievement}` : '';
+            const star = person.star || student?.star ? ' ★' : '';
+            const slug = student?.slug || person.slug || name;
+
+            return `
+                <div class="student-card-mini" onclick="viewStudent('${Utils.escapeAttr(slug)}')">
+                    <img src="${Utils.escapeAttr(image)}" alt="${Utils.escapeAttr(name)}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2750%27 height=%2750%27%3E%3Ccircle cx=%2725%27 cy=%2725%27 r=%2725%27 fill=%27%23ddd%27/%3E%3C/svg%3E'">
+                    <div class="student-card-mini-info">
+                        <div class="student-card-mini-name">${Utils.escapeHtml(name)}${star}</div>
+                        <div class="student-card-mini-role">${Utils.escapeHtml(role)}${Utils.escapeHtml(achievement)}</div>
+                    </div>
+                </div>`;
+        }
+
+        function renderStudents(element) {
+            const people = element.students || [];
+            if (!people.length) return '';
+
+            const groups = { Secondary: [], Preparatory: [], Primary: [], Other: [] };
+            for (const person of people) {
+                const student = DataStore.getStudent(person.slug || person.name);
+                const studentClass = student?.class || person.class || '';
+                if (student?.type === 'teacher' || studentClass === 'Teacher') groups.Other.push(person);
+                else if (groups[studentClass]) groups[studentClass].push(person);
+                else groups.Other.push(person);
             }
 
+            const colors = { Secondary: '#333', Preparatory: '#2A6B54', Primary: '#4299E1', Other: '#8B3A5C' };
+            const sections = Object.entries(groups)
+                .filter(([, members]) => members.length)
+                .map(
+                    ([title, members]) => `
+                        <div class="students-group">
+                            <div class="group-separator" style="border-left: 4px solid ${colors[title]};">${title}</div>
+                            <div class="article-students-grid">${members.map((person) => renderPersonCard(person)).join('')}</div>
+                        </div>`
+                )
+                .join('');
+
+            return `<div class="article-students"><h3>Students in this article:</h3>${sections}</div>`;
+        }
+
+        function renderOrganizers(element) {
+            const people = element.organizers || [];
+            if (!people.length) return '';
+            return `
+                <div class="article-organizers">
+                    <h3>Organizers / Teachers:</h3>
+                    <div class="article-organizers-grid">${people.map((person) => renderPersonCard(person, true)).join('')}</div>
+                </div>`;
+        }
+
+        function renderVideo(value) {
+            const ids = String(value || '')
+                .split(',')
+                .map((item) => Utils.youtubeEmbedUrl(item))
+                .filter(Boolean);
+            if (!ids.length) return '';
+
+            if (ids.length > 1) {
+                return `<div class="article-video-row" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:30px 0;">${ids
+                    .map(
+                        (url) => `<div style="position:relative;padding-bottom:56.25%;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-md);"><iframe src="${Utils.escapeAttr(url)}" title="YouTube video player" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>`
+                    )
+                    .join('')}</div>`;
+            }
+
+            return `<div class="article-video"><iframe src="${Utils.escapeAttr(ids[0])}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>`;
+        }
+
+        function renderSlideshow(element, index) {
+            const images = (element.images || []).filter(Boolean);
+            if (!images.length) return '';
+            const slideId = `slideshow-${index}`;
+            const slides = images
+                .map(
+                    (image, imageIndex) =>
+                        `<img src="${Utils.escapeAttr(image)}" alt="Slide ${imageIndex + 1}" class="slide" style="display:${imageIndex === 0 ? 'block' : 'none'}" loading="lazy">`
+                )
+                .join('');
+            const dots = images
+                .map(
+                    (_, imageIndex) =>
+                        `<button class="slideshow-dot ${imageIndex === 0 ? 'active' : ''}" type="button" aria-label="Go to slide ${imageIndex + 1}" data-slide="${slideId}" data-index="${imageIndex}" onclick="goSlide('${slideId}', ${imageIndex})"></button>`
+                )
+                .join('');
+
+            return `
+                <div class="slideshow">
+                    <div class="slideshow-images" id="${slideId}">${slides}</div>
+                    <div class="slideshow-arrows">
+                        <button class="slideshow-arrow" type="button" aria-label="Previous slide" onclick="prevSlide('${slideId}')">&lsaquo;</button>
+                        <button class="slideshow-arrow" type="button" aria-label="Next slide" onclick="nextSlide('${slideId}')">&rsaquo;</button>
+                    </div>
+                    <div class="slideshow-nav">${dots}</div>
+                    ${element.caption ? `<p style="text-align:center;color:#666;margin-top:12px;">${Utils.escapeHtml(element.caption)}</p>` : ''}
+                </div>`;
+        }
+
+        function renderArticle(article) {
             document.getElementById('articleTitle').textContent = article.title;
-            document.getElementById('articleMeta').textContent = `Published in The Rising Times News | ${article.category || 'News'} | ${article.date || ''}`;
+            document.getElementById('articleMeta').textContent = `Published in The Rising Times News | ${article.category || 'News'}${article.date ? ` | ${article.date}` : ''}`;
+            document.title = article.seo_title || `${article.title} | The Rising Times`;
+            const excerpt = article.seo_description || DataStore.getEventExcerpt(article);
+            setMeta('name', 'description', excerpt);
+            setMeta('property', 'og:title', article.title);
+            setMeta('property', 'og:description', excerpt);
+            setMeta('property', 'og:image', article.og_image_url || DataStore.getEventPreviewImage(article));
+            setMeta('property', 'og:url', window.location.href);
 
-            const content = document.getElementById('articleContent');
             let html = '';
-
-            if (article.elements) {
-                article.elements.forEach(el => {
-                    switch (el.type) {
-                        case 'text':
-                            html += `<div class="article-text"><p>${el.content}</p></div>`;
-                            break;
-                        case 'image':
-                            if (el.align === 'full') {
-                                html += `<div class="article-full-image"><img src="${el.image}" alt="${el.caption || article.title}" onerror="this.style.display='none'"></div>`;
+            (article.elements || []).forEach((element, index) => {
+                switch (element.type) {
+                    case 'text':
+                        if (element.content) {
+                            html += `<div class="article-text rich-text">${Utils.sanitize(element.content)}</div>`;
+                        }
+                        break;
+                    case 'image':
+                        if (element.image) {
+                            const caption = element.caption
+                                ? `<p style="color:#666;font-size:14px;">${Utils.escapeHtml(element.caption)}</p>`
+                                : '';
+                            if (element.align === 'full' || !element.align) {
+                                html += `<div class="article-full-image"><img src="${Utils.escapeAttr(element.image)}" alt="${Utils.escapeAttr(element.caption || article.title)}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>${caption}`;
                             } else {
-                                const reverse = el.align === 'right' ? ' reverse' : '';
-                                html += `<div class="article-image-text${reverse}"><img src="${el.image}" alt="${el.caption || article.title}" onerror="this.style.display='none'"><div>${el.caption ? `<p>${el.caption}</p>` : ''}</div></div>`;
+                                const reverse = element.align === 'right' ? ' reverse' : '';
+                                html += `<div class="article-image-text${reverse}"><img src="${Utils.escapeAttr(element.image)}" alt="${Utils.escapeAttr(element.caption || article.title)}" loading="lazy" onerror="this.parentElement.style.display='none'"><div>${caption}</div></div>`;
                             }
-                            break;
-                        case 'slideshow':
-                            if (el.images && el.images.length) {
-                                const slideId = 'slideshow-' + Math.random().toString(36).substr(2, 9);
-                                const slides = el.images.map((img, i) => `<img src="${img}" alt="Slide ${i+1}" class="slide" style="display:${i===0?'block':'none'}">`).join('');
-                                const dots = el.images.map((_, i) => `<div class="slideshow-dot" data-slide="${slideId}" data-index="${i}" onclick="goSlide('${slideId}', ${i})" style="${i===0?'background:var(--primary-gold)':''}"></div>`).join('');
-                                html += `<div class="slideshow"><div class="slideshow-images" id="${slideId}" style="border-radius:12px;overflow:hidden;">${slides}</div><div class="slideshow-arrows" style="position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 10px;pointer-events:none;"><button class="slideshow-arrow" onclick="prevSlide('${slideId}')" style="pointer-events:auto;">&lsaquo;</button><button class="slideshow-arrow" onclick="nextSlide('${slideId}')" style="pointer-events:auto;">&rsaquo;</button></div><div class="slideshow-nav">${dots}</div></div>`;
-                                if (el.caption) html += `<p style="text-align:center;color:#666;margin-bottom:30px;margin-top:-25px;position:relative;z-index:1;">${el.caption}</p>`;
-                            }
-                            break;
-                        case 'video':
-                            if (el.video) {
-                                const videoIds = el.video.split(',').map(v => v.trim()).filter(v => v);
-                                if (videoIds.length > 1) {
-                                    html += `<div class="article-video-row" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:30px 0;">`;
-                                    videoIds.forEach(videoId => {
-                                        const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&enablejsapi=1&origin=${window.location.origin}`;
-                                        html += `<div style="position:relative;padding-bottom:56.25%;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-md);">
-                                            <iframe width="100%" height="100%" style="position:absolute;top:0;left:0;height:100%;" src="${embedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                                        </div>`;
-                                    });
-                                    html += `</div>`;
-                                } else {
-                                    const videoId = videoIds[0];
-                                    const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&enablejsapi=1&origin=${window.location.origin}`;
-                                    html += `<div class="article-video" style="margin: 30px 0; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md);">
-                                    <iframe 
-                                        width="100%" 
-                                        height="500" 
-                                        src="${embedUrl}" 
-                                        title="YouTube video player" 
-                                        frameborder="0" 
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                        allowfullscreen>
-                                    </iframe>
-                                </div>`;
-                                }
-                            }
-                            break;
-                        case 'quote':
-                            html += `<div class="article-quote">"${el.quote}"${el.author ? `<div class="quote-author">— ${el.author}</div>` : ''}</div>`;
-                            break;
-                        case 'students':
-                            if (el.students && el.students.length) {
-                                let studentsHtml = '<div class="article-students"><h3>Students in this article:</h3>';
-                                
-                                const secondary = [], preparatory = [], primary = [], other = [];
-                                el.students.forEach(s => {
-                                    const student = DataStore.getStudent(s.name);
-                                    const studentClass = (student?.class || 'other').toString().toLowerCase();
-                                    if (student?.type === 'teacher' || studentClass === 'teacher') {
-                                        other.push(s);
-                                    } else if (studentClass === 'secondary') {
-                                        secondary.push(s);
-                                    } else if (studentClass === 'preparatory') {
-                                        preparatory.push(s);
-                                    } else if (studentClass === 'primary') {
-                                        primary.push(s);
-                                    } else {
-                                        other.push(s);
-                                    }
-                                });
-                                
-                                const renderGroup = (students, title, color) => {
-                                    if (!students.length) return '';
-                                    return `<div class="students-group">
-                                        <div class="group-separator" style="border-left: 4px solid ${color};">${title}</div>
-                                        <div class="article-students-grid">` +
-                                        students.map(s => {
-                                            const student = DataStore.getStudent(s.name);
-                                            const img = student?.image || '';
-                                            const isStar = student?.star && student?.type === 'student';
-                                            return `<div class="student-card-mini" onclick="viewStudent('${s.name}')">
-                                                <img src="${img}" alt="${s.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2750%27 height=%2750%27%3E%3Ccircle cx=%2725%27 cy=%2725%27 r=%2725%27 fill=%27%23ddd%27/%3E%3C/svg%3E'">
-                                                <div class="student-card-mini-info">
-                                                    <div class="student-card-mini-name">${s.name} ${isStar ? '★' : ''}</div>
-                                                    <div class="student-card-mini-role">${s.role || 'Student'} ${s.achievement ? '- ' + s.achievement : ''}</div>
-                                                </div>
-                                            </div>`;
-                                        }).join('') + '</div></div>';
-                                };
-                                
-                                studentsHtml += renderGroup(secondary, 'Secondary', '#333');
-                                studentsHtml += renderGroup(preparatory, 'Preparatory', '#2A6B54');
-                                studentsHtml += renderGroup(primary, 'Primary', '#4299E1');
-                                studentsHtml += renderGroup(other, 'Other', '#8B3A5C');
-                                studentsHtml += '</div>';
-                                html += studentsHtml;
-                            }
-                            break;
-                        case 'organizers':
-                            if (el.organizers && el.organizers.length) {
-                                let orgHtml = '<div class="article-organizers"><h3 style="color:#DC143C;">Organizers / Teachers:</h3><div class="article-organizers-grid">';
-                                el.organizers.forEach(s => {
-                                    const student = DataStore.getStudent(s.name);
-                                    const img = student?.image || '';
-                                    const isStar = student?.star && student?.type === 'student';
-                                    orgHtml += `
-                                        <div class="student-card-mini" onclick="viewStudent('${s.name}')">
-                                            <img src="${img}" alt="${s.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2750%27 height=%2750%27%3E%3Ccircle cx=%2725%27 cy=%2725%27 r=%2725%27 fill=%27%23ddd%27/%3E%3C/svg%3E'">
-                                            <div class="student-card-mini-info">
-                                                <div class="student-card-mini-name">${s.name} ${isStar ? '★' : ''}</div>
-                                                <div class="student-card-mini-role">${s.role || student?.role || 'Teacher'} ${s.achievement ? '- ' + s.achievement : ''}</div>
-                                            </div>
-                                        </div>`;
-                                });
-                                orgHtml += '</div></div>';
-                                html += orgHtml;
-                            }
-                            break;
-                    }
-                });
-            }
+                        }
+                        break;
+                    case 'slideshow':
+                        html += renderSlideshow(element, index);
+                        break;
+                    case 'video':
+                        html += renderVideo(element.video);
+                        break;
+                    case 'quote':
+                        if (element.quote) {
+                            html += `<div class="article-quote">"${Utils.escapeHtml(element.quote)}"${element.author ? `<div class="quote-author">— ${Utils.escapeHtml(element.author)}</div>` : ''}</div>`;
+                        }
+                        break;
+                    case 'students':
+                        html += renderStudents(element);
+                        break;
+                    case 'organizers':
+                        html += renderOrganizers(element);
+                        break;
+                }
+            });
 
-            content.innerHTML = html;
+            document.getElementById('articleContent').innerHTML =
+                html || '<p class="empty-state">This article has no content yet.</p>';
         }
 
-        function goSlide(slideId, n) {
+        function goSlide(slideId, index) {
             const container = document.getElementById(slideId);
+            if (!container) return;
             const slides = container.querySelectorAll('.slide');
-            const dots = document.querySelectorAll('.slideshow-dot[data-slide="' + slideId + '"]');
-            let current = 0;
-            dots.forEach((d, i) => {
-                if (d.classList.contains('active')) current = i;
+            const dots = document.querySelectorAll(`.slideshow-dot[data-slide="${slideId}"]`);
+            if (!slides.length) return;
+            const current = ((index % slides.length) + slides.length) % slides.length;
+            slides.forEach((slide, slideIndex) => {
+                slide.style.display = slideIndex === current ? 'block' : 'none';
             });
-            current = (n + slides.length) % slides.length;
-            slides.forEach((s, i) => s.style.display = i === current ? 'block' : 'none');
-            dots.forEach((d, i) => {
-                d.style.background = i === current ? 'var(--primary-gold)' : '#ddd';
-                d.classList.toggle('active', i === current);
+            dots.forEach((dot, dotIndex) => {
+                dot.classList.toggle('active', dotIndex === current);
+                dot.setAttribute('aria-selected', dotIndex === current ? 'true' : 'false');
             });
         }
+
         function nextSlide(slideId) {
-            const slides = document.querySelectorAll('#' + slideId + ' .slide');
-            const dots = document.querySelectorAll('.slideshow-dot[data-slide="' + slideId + '"]');
+            const dots = document.querySelectorAll(`.slideshow-dot[data-slide="${slideId}"]`);
             let current = 0;
-            dots.forEach((d, i) => {
-                if (d.classList.contains('active')) current = i;
+            dots.forEach((dot, index) => {
+                if (dot.classList.contains('active')) current = index;
             });
             goSlide(slideId, current + 1);
         }
+
         function prevSlide(slideId) {
-            const slides = document.querySelectorAll('#' + slideId + ' .slide');
-            const dots = document.querySelectorAll('.slideshow-dot[data-slide="' + slideId + '"]');
+            const dots = document.querySelectorAll(`.slideshow-dot[data-slide="${slideId}"]`);
             let current = 0;
-            dots.forEach((d, i) => {
-                if (d.classList.contains('active')) current = i;
+            dots.forEach((dot, index) => {
+                if (dot.classList.contains('active')) current = index;
             });
             goSlide(slideId, current - 1);
         }
 
-        function viewStudent(name) {
-            window.location.href = 'student.html?name=' + encodeURIComponent(name);
+        function viewStudent(slugOrName) {
+            const student = DataStore.getStudent(slugOrName);
+            window.location.href = student
+                ? `student.html?slug=${encodeURIComponent(student.slug)}`
+                : `student.html?name=${encodeURIComponent(slugOrName)}`;
+        }
+
+        async function init() {
+            try {
+                await DataStore.load();
+                DataStore.applySiteMeta();
+                const article = DataStore.getEvent(articleId);
+                if (!article) {
+                    document.getElementById('articleTitle').textContent = 'Article Not Found';
+                    document.getElementById('articleMeta').textContent = 'The requested article could not be found.';
+                    document.getElementById('articleContent').innerHTML =
+                        '<p class="empty-state">The requested article could not be found. <a href="index.html">Return to the magazine</a>.</p>';
+                    return;
+                }
+                renderArticle(article);
+            } catch (error) {
+                document.getElementById('articleTitle').textContent = 'Could Not Load Article';
+                document.getElementById('articleContent').innerHTML = `<p class="error-state">${Utils.escapeHtml(error.message)}</p>`;
+            }
         }
 
         init();

@@ -30,22 +30,14 @@
         .stage-title.sec { background: #1a1a1a; color: #fff; }
         .stage-title.prep { background: #1B4D3E; color: #fff; }
         .stage-title.pri { background: #2C5282; color: #fff; }
-@media (min-width: 769px) {
-            .cse-grid { 
-                display: grid; 
-                grid-template-columns: repeat(3, 1fr); 
-                gap: 16px; 
-            }
+        @media (min-width: 769px) {
+            .cse-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
             .cse-grid .cse-card[data-col="1"] { grid-column: 1; }
             .cse-grid .cse-card[data-col="2"] { grid-column: 2; }
             .cse-grid .cse-card[data-col="3"] { grid-column: 3; }
         }
         @media (max-width: 768px) {
-            .cse-grid { 
-                display: grid; 
-                grid-template-columns: repeat(3, 1fr); 
-                gap: 8px; 
-            }
+            .cse-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
             .cse-grid .cse-card[data-col="1"] { grid-column: 1; }
             .cse-grid .cse-card[data-col="2"] { grid-column: 2; }
             .cse-grid .cse-card[data-col="3"] { grid-column: 3; }
@@ -57,17 +49,9 @@
             .cse-card .role-icon { font-size: 14px; }
             .cse-card .role-title { font-size: 7px; }
             .cse-card .role-name { font-size: 9px; }
-            .cse-card .role-badge { font-size: 6px; padding: 2px 6px; }
             .stage-title { font-size: 14px; padding: 8px; margin-bottom: 12px; }
         }
-        .cse-card { 
-            background: var(--bg-white); 
-            border-radius: 10px; 
-            padding: 16px; 
-            text-align: center; 
-            box-shadow: var(--shadow-sm);
-            cursor: pointer; 
-        }
+        .cse-card { background: var(--bg-white); border-radius: 10px; padding: 16px; text-align: center; box-shadow: var(--shadow-sm); cursor: pointer; }
         .cse-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
         .cse-card.empty { background: #f5f5f5; cursor: default; }
         .cse-card.empty:hover { transform: none; }
@@ -75,7 +59,6 @@
         .cse-card .role-icon { font-size: 20px; margin-bottom: 4px; }
         .cse-card .role-title { font-size: 9px; color: #666; text-transform: uppercase; margin-bottom: 4px; }
         .cse-card .role-name { font-size: 12px; font-weight: 600; }
-        .cse-card .role-badge { display: inline-block; background: var(--primary-gold); color: #000; font-size: 8px; padding: 2px 8px; border-radius: 10px; margin-top: 6px; }
         .stage-sec .cse-card { border-color: #333; }
         .stage-sec .cse-card img { border-color: #333; }
         .stage-prep .cse-card { border-color: #2A6B54; }
@@ -88,33 +71,33 @@
     <div class="bg-stars"></div>
     <nav class="navbar">
         <div class="container flex justify-between items-center">
-            <a href="index.html" class="logo"><img src="assets/images/logo.png" alt="Logo"></a>
+            <a href="index.html" class="logo"><img src="assets/images/logo.png" alt="The Rising Times logo"></a>
             <a href="javascript:void(0)" onclick="window.history.back()" class="btn btn-primary" style="padding:8px 16px;font-size:12px;">&larr; Back</a>
         </div>
     </nav>
     <div class="cse-header">
         <h1>CSE Council</h1>
-        <p>Cultural, Scientific & Educational Council</p>
+        <p>Cultural, Scientific &amp; Educational Council</p>
         <div class="cse-head" id="cseHead">
             <img src="" alt="Council Head" id="cseHeadImg" style="display:none;">
             <div class="cse-head-info">
                 <div class="label">Council Head</div>
-                <div class="name">Miss Somia</div>
+                <div class="name" id="cseHeadName">Miss Somia</div>
             </div>
         </div>
     </div>
     <section class="cse-content">
         <div class="stage-section stage-sec">
             <h2 class="stage-title sec">Secondary</h2>
-            <div class="cse-grid" id="secondaryGrid"></div>
+            <div class="cse-grid" id="secondaryGrid"><div class="loading-block" role="status">Loading…</div></div>
         </div>
         <div class="stage-section stage-prep">
             <h2 class="stage-title prep">Preparatory</h2>
-            <div class="cse-grid" id="preparatoryGrid"></div>
+            <div class="cse-grid" id="preparatoryGrid"><div class="loading-block" role="status">Loading…</div></div>
         </div>
         <div class="stage-section stage-pri">
             <h2 class="stage-title pri">Primary</h2>
-            <div class="cse-grid" id="primaryGrid"></div>
+            <div class="cse-grid" id="primaryGrid"><div class="loading-block" role="status">Loading…</div></div>
         </div>
     </section>
     <footer class="footer">
@@ -124,74 +107,76 @@
             <p>&copy; 2026 All Rights Reserved</p>
         </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/data.js"></script>
     <script>
-        const roles = [
-            { key: 'president', title: 'President', icon: '👑' },
-            { key: 'vicePresident', title: 'Vice President', icon: '⭐' },
-            { key: 'science', title: 'Science', icon: '🔬' },
-            { key: 'religiousCulture', title: 'Religious & Culture', icon: '🕌' },
-            { key: 'art', title: 'Art', icon: '🎨' },
-            { key: 'social', title: 'Social', icon: '🤝' },
-            { key: 'sports', title: 'Sports', icon: '🏆' }
+        const orderedRoles = [
+            { key: 'president', title: 'President', icon: '👑', col: 2 },
+            { key: 'science', title: 'Science', icon: '🔬', col: 1 },
+            { key: 'vicePresident', title: 'Vice President', icon: '⭐', col: 2 },
+            { key: 'social', title: 'Social', icon: '🤝', col: 3 },
+            { key: 'religiousCulture', title: 'Religious & Culture', icon: '🕌', col: 1 },
+            { key: 'sports', title: 'Sports', icon: '🏆', col: 2 },
+            { key: 'art', title: 'Art', icon: '🎨', col: 3 }
         ];
-        
-        function getOrderedRoles() {
-            return [
-                { key: 'president', title: 'President', icon: '👑', col: 2 },
-                { key: 'science', title: 'Science', icon: '🔬', col: 1 },
-                { key: 'vicePresident', title: 'Vice President', icon: '⭐', col: 2 },
-                { key: 'social', title: 'Social', icon: '🤝', col: 3 },
-                { key: 'religiousCulture', title: 'Religious & Culture', icon: '🕌', col: 1 },
-                { key: 'sports', title: 'Sports', icon: '🏆', col: 2 },
-                { key: 'art', title: 'Art', icon: '🎨', col: 3 }
-            ];
-        }
-        
+
         function renderCard(role, studentName) {
             const student = studentName ? DataStore.getStudent(studentName) : null;
             if (studentName && student) {
-                return `<div class="cse-card" data-col="${role.col}" onclick="viewStudent('${studentName}')">
-                    <img src="${student.image || ''}" alt="${studentName}" onerror="this.style.display='none'">
+                return `<div class="cse-card" data-col="${role.col}" onclick="viewStudent('${Utils.escapeAttr(student.slug)}')">
+                    <img src="${Utils.escapeAttr(student.image || '')}" alt="${Utils.escapeAttr(studentName)}" loading="lazy" onerror="this.style.display='none'">
                     <div class="role-icon">${role.icon}</div>
                     <div class="role-title">${role.title}</div>
-                    <div class="role-name">${studentName}</div>
+                    <div class="role-name">${Utils.escapeHtml(studentName)}</div>
                 </div>`;
             }
             return `<div class="cse-card empty" data-col="${role.col}"><div class="role-icon">${role.icon}</div><div class="role-title">${role.title}</div><div class="role-name" style="color:#999;font-style:italic;">Vacant</div></div>`;
         }
-        async function init() {
-            await DataStore.load();
-            renderCSECouncil();
-        }
-        function renderCSECouncil() {
+
+        function renderCouncil() {
             const council = DataStore.getCSECouncil();
             const headName = council.head || 'Miss Somia';
-            const headStudent = DataStore.getStudent(headName);
-            document.querySelector('#cseHead .name').textContent = headName;
+            const headStudent = DataStore.getStudent(headName) || (council.headId ? DataStore.getStudent(council.headId) : null);
+
+            document.getElementById('cseHeadName').textContent = headName;
             const headImg = document.getElementById('cseHeadImg');
-            if (headStudent) {
-                if (headStudent.image) { headImg.src = headStudent.image; headImg.style.display = 'block'; }
-                document.getElementById('cseHead').onclick = () => viewStudent(headName);
-                document.getElementById('cseHead').style.cursor = 'pointer';
+            if (headStudent?.image) {
+                headImg.src = headStudent.image;
+                headImg.alt = headStudent.name;
+                headImg.style.display = 'block';
+                document.getElementById('cseHead').onclick = () => viewStudent(headStudent.slug);
+            } else {
+                headImg.style.display = 'none';
+                document.getElementById('cseHead').onclick = null;
+                document.getElementById('cseHead').style.cursor = 'default';
             }
-            const renderCard = (role, studentName) => {
-                const student = studentName ? DataStore.getStudent(studentName) : null;
-                if (studentName && student) {
-                    return `<div class="cse-card" data-col="${role.col}" onclick="viewStudent('${studentName}')">
-                        <img src="${student.image || ''}" alt="${studentName}" onerror="this.style.display='none'">
-                        <div class="role-icon">${role.icon}</div>
-                        <div class="role-title">${role.title}</div>
-                        <div class="role-name">${studentName}</div>
-                    </div>`;
-                }
-                return `<div class="cse-card empty" data-col="${role.col}"><div class="role-icon">${role.icon}</div><div class="role-title">${role.title}</div><div class="role-name" style="color:#999;font-style:italic;">Vacant</div></div>`;
-            };
-            ['secondary', 'preparatory', 'primary'].forEach(stage => {
-                document.getElementById(stage + 'Grid').innerHTML = getOrderedRoles().map(role => renderCard(role, council.stages[stage][role.key])).join('');
-            });
+
+            for (const stage of ['secondary', 'preparatory', 'primary']) {
+                document.getElementById(`${stage}Grid`).innerHTML = orderedRoles
+                    .map((role) => renderCard(role, council.stages[stage]?.[role.key] || ''))
+                    .join('');
+            }
         }
-        function viewStudent(name) { window.location.href = 'student.html?name=' + encodeURIComponent(name); }
+
+        function viewStudent(slug) {
+            window.location.href = `student.html?slug=${encodeURIComponent(slug)}`;
+        }
+
+        async function init() {
+            try {
+                await DataStore.load();
+                DataStore.applySiteMeta();
+                renderCouncil();
+            } catch (error) {
+                for (const stage of ['secondary', 'preparatory', 'primary']) {
+                    document.getElementById(`${stage}Grid`).innerHTML = `<p class="error-state" style="grid-column:1/-1;">${Utils.escapeHtml(error.message)}</p>`;
+                }
+            }
+        }
+
         init();
     </script>
 </body>

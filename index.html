@@ -5,22 +5,23 @@
     <meta name="msvalidate.01" content="103D0E428C58A1A08B0246FE27CA2B8B" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Optimized Title for "Rising News" and "Rising Stars" combinations -->
+
     <title>The Rising Times | Rising Stars News & Language School Magazine</title>
-    
-    <meta name="description" content="Official school news magazine for Rising Stars Language School, The Rising Times. Featuring student achievements, academic competitions, and Rising Stars news updates., Rising Stars News, Rising Stars Magazine, The Rising Times, Student Achievements, CSE Council, the rising times, the rising times magazine, rising stars, rising stars october, rising stars website, the rising times news, rising news, rising stars news">
-    <meta name="keywords" content="Rising Stars, School Magazine, The Rising Times, Student Achievements, CSE Council, the rising times, the rising times magazine, rising stars, rising stars october, rising stars website, the rising times news, rising news, rising stars news">
+
+    <meta name="description" content="Official school news magazine for Rising Stars Language School, The Rising Times. Featuring student achievements, academic competitions, and Rising Stars news updates.">
+    <meta name="keywords" content="Rising Stars, School Magazine, The Rising Times, Student Achievements, CSE Council, Rising Stars News">
     <meta property="og:title" content="The Rising Times - Rising Stars News">
     <meta property="og:description" content="Stay updated with the latest news and achievements from Rising Stars Language School.">
     <meta property="og:url" content="https://therisingtimes.vercel.app/">
-    
+    <meta property="og:image" content="https://therisingtimes.vercel.app/assets/images/logo1.png">
+    <meta property="og:type" content="website">
+
     <link rel="stylesheet" href="css/style.css">
     <link rel="shortcut icon" type="image/png" href="assets/images/decorative.png?v=1">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/images/decorative.png?v=1">
     <link rel="icon" type="image/png" sizes="64x64" href="assets/images/decorative.png?v=1">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/images/decorative.png?v=1">
-    
+
     <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
     <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
@@ -31,19 +32,15 @@
     </script>
 </head>
 <body>
-    <!-- Hidden Keyword Magnet for Search Crawlers -->
-    <h2 style="position: absolute; left: -9999px;">Rising News from Rising Stars Language School Magazine</h2>
+    <h2 class="visually-hidden">Rising News from Rising Stars Language School Magazine</h2>
 
     <div class="bg-stars"></div>
 
-    <!-- STAR BUTTON -->
     <a href="top-students.html" class="star-btn"><img src="assets/images/dastar.png" alt="Rising Stars Achievements"></a>
 
-    <!-- NAVIGATION -->
     <nav class="navbar">
         <div class="container">
             <a href="index.html" class="logo">
-                <!-- Descriptive Alt Text for Logo Search -->
                 <img src="assets/images/logo.png" alt="The Rising Times News - Rising Stars Language School">
             </a>
 
@@ -57,12 +54,12 @@
                 <li><a href="admin.html" class="admin-link">Admin</a></li>
             </ul>
 
-            <div class="social-nav">
-                <a href="https://www.instagram.com/risingtimesofficial?igsh=MW5zdmk3dnA4OTVvbw==" target="_blank"><img src="assets/images/instagram.webp" alt="Rising Times Instagram"></a>
-                <a href="https://www.facebook.com/RisingStars.6thofOctober/" target="_blank" class="fb-btn"><img src="assets/images/facebook.png" alt="Rising Stars Facebook"></a>
+            <div class="social-nav" id="socialNav">
+                <a href="https://www.instagram.com/risingtimesofficial" target="_blank" rel="noopener"><img src="assets/images/instagram.webp" alt="Rising Times Instagram"></a>
+                <a href="https://www.facebook.com/RisingStars.6thofOctober/" target="_blank" rel="noopener" class="fb-btn"><img src="assets/images/facebook.png" alt="Rising Stars Facebook"></a>
             </div>
 
-            <button class="menu-toggle" onclick="toggleMenu()">
+            <button class="menu-toggle" type="button" aria-label="Toggle menu" onclick="toggleMenu()">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -70,67 +67,67 @@
         </div>
     </nav>
 
-    <!-- HERO -->
     <section id="home" class="hero">
         <div class="hero-content">
             <img src="assets/images/logo1.png" alt="The Rising Times Logo" style="height:200px;margin-bottom:20px;">
-            <h1>The Rising Times</h1>
-            <p>The Official Digital Magazine of Rising Stars Language School</p>
+            <h1 id="heroTitle">The Rising Times</h1>
+            <p id="heroSubtitle">The Official Digital Magazine of Rising Stars Language School</p>
             <div style="display:flex;align-items:center;justify-content:center;">
                 <div class="read-news-wrap">
-                    <a href="#articles" class="btn btn-primary">Read News</a>
-                    <div class="dastar-btns">
-                        <a href="https://youtu.be/hDmSL2mo4b4?si=aifXbCBIoHW100_T" target="_blank" class="star-btn-hover dastar3-link"><img src="assets/images/dastar3.png" alt="Rising News Video" class="dastar3-img"></a>
-                        <a href="https://youtu.be/VBsYzKxRdEA?si=A5tMzBfgJcRrWr9L" target="_blank" class="star-btn-hover dastar2-link"><img src="assets/images/dastar2.png" alt="Rising Stars Video" class="dastar2-img"></a>
+                    <a href="#articles" class="btn btn-primary" id="heroReadMore">Read News</a>
+                    <div class="dastar-btns" id="heroVideos">
+                        <a href="https://youtu.be/hDmSL2mo4b4" target="_blank" rel="noopener" class="star-btn-hover dastar3-link"><img src="assets/images/dastar3.png" alt="Rising News Video" class="dastar3-img"></a>
+                        <a href="https://youtu.be/VBsYzKxRdEA" target="_blank" rel="noopener" class="star-btn-hover dastar2-link"><img src="assets/images/dastar2.png" alt="Rising Stars Video" class="dastar2-img"></a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ARTICLES -->
     <section id="articles" class="section">
         <div class="container">
             <div class="section-header">
                 <h2>Latest Rising News</h2>
             </div>
             <div class="articles-grid" id="articlesGrid">
-                <div class="article-card">
-                    <div class="card-image"></div>
-                    <div class="card-title">Loading...</div>
-                    <p class="card-excerpt">Loading articles</p>
+                <div class="article-card skeleton-card">
+                    <div class="card-image skeleton"></div>
+                    <div class="card-title skeleton-line"></div>
+                    <p class="card-excerpt skeleton-line short"></p>
+                </div>
+                <div class="article-card skeleton-card">
+                    <div class="card-image skeleton"></div>
+                    <div class="card-title skeleton-line"></div>
+                    <p class="card-excerpt skeleton-line short"></p>
                 </div>
             </div>
+            <div id="articlesStatus" class="status-line" role="status"></div>
         </div>
     </section>
 
-    <!-- ABOUT -->
     <section id="about" class="section">
         <div class="container">
             <div class="section-header">
                 <h2>About The Rising Times</h2>
             </div>
             <div class="card" style="padding:30px;margin-bottom:30px;pointer-events:none;">
-                <p style="font-size:15px;color:#333;margin-bottom:16px;line-height:1.8;">
-                    This website was conceived and built by the <strong>Cultural, Scientific & Educational Council (CSE)</strong> of Rising Stars Language School. This digital magazine is to showcase our school's achievements & all of our students' perseverance to keep learning and getting better.
-                </p>
+                <p id="aboutText" style="font-size:15px;color:#333;margin-bottom:16px;line-height:1.8;"></p>
                 <div style="text-align:center;margin-top:8px;">
-                    <a href="cse-council.html" class="btn btn-primary" style="pointer-events:auto;">Visit CSE Council</a>
+                    <a href="cse-council.html" class="btn btn-primary" id="aboutCta" style="pointer-events:auto;">Visit CSE Council</a>
                 </div>
             </div>
             <div class="team-grid" id="teamGridDesktop"></div>
             <div class="team-carousel">
-                <button class="tc-btn" onclick="moveTeamSlide(-1)">&#10094;</button>
+                <button class="tc-btn" type="button" aria-label="Previous team member" onclick="moveTeamSlide(-1)">&#10094;</button>
                 <div class="tc-track" id="teamCarousel">
-                    <div class="tc-slide active"><p style="padding:20px;">Loading...</p></div>
+                    <div class="tc-slide active"><p style="padding:20px;">Loading…</p></div>
                 </div>
-                <button class="tc-btn" onclick="moveTeamSlide(1)">&#10095;</button>
+                <button class="tc-btn" type="button" aria-label="Next team member" onclick="moveTeamSlide(1)">&#10095;</button>
             </div>
             <div class="tc-dots" id="teamDots"></div>
         </div>
     </section>
 
-    <!-- SCHOOL -->
     <section id="school" class="section">
         <div class="container">
             <div class="section-header">
@@ -138,12 +135,7 @@
             </div>
             <div class="grid grid-2" style="gap:40px;align-items:center;">
                 <div class="card" style="padding:30px;pointer-events:none;">
-                    <ul class="school-info-list">
-                        <li>Private school owned by futures education system</li>
-                        <li>Modern school with smart boards and science labs</li>
-                        <li>Beautiful garden for student activities</li>
-                        <li>Committed to excellence and innovation</li>
-                    </ul>
+                    <ul class="school-info-list" id="schoolList"></ul>
                 </div>
                 <div class="school-images">
                     <img src="assets/images/School.png" alt="Rising Stars Language School Campus">
@@ -153,123 +145,187 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="footer">
         <div class="container">
-            <!-- Keyword Rich Footer Text for Crawlers -->
-            <p style="font-size: 11px; color: #777; margin-bottom: 12px; opacity: 0.7; max-width: 600px; margin-inline: auto;">
-                The Rising Times is the premier source for Rising News and student achievements at Rising Stars Language School. Explore our digital magazine for the latest updates from Rising Stars.
-            </p>
-            <p><strong>THE RISING TIMES NEWS</strong></p>
-            <p>Rising Stars Language School | Futures Education System</p>
-            <p>&copy; 2026 All Rights Reserved</p>
+            <p id="footerTagline" style="font-size: 11px; color: #777; margin-bottom: 12px; opacity: 0.7; max-width: 600px; margin-inline: auto;"></p>
+            <p><strong id="footerName">THE RISING TIMES NEWS</strong></p>
+            <p id="footerSchool">Rising Stars Language School | Futures Education System</p>
+            <p id="footerCopyright">&copy; 2026 All Rights Reserved</p>
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/data.js"></script>
     <script>
         let teamSlide = 0;
-        
+
         function moveTeamSlide(n) {
             const total = document.querySelectorAll('.tc-slide').length;
+            if (!total) return;
             teamSlide = (teamSlide + n + total) % total;
             goTeamSlide(teamSlide);
         }
-        
+
         function goTeamSlide(n) {
-            document.querySelectorAll('.tc-slide').forEach((s, i) => s.classList.toggle('active', i === n));
-            document.querySelectorAll('.tc-dot').forEach((d, i) => d.classList.toggle('active', i === n));
+            document.querySelectorAll('.tc-slide').forEach((slide, index) => {
+                slide.classList.toggle('active', index === n);
+            });
+            document.querySelectorAll('.tc-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === n);
+                dot.setAttribute('aria-selected', index === n ? 'true' : 'false');
+            });
             teamSlide = n;
         }
-        
-        async function init() {
-            await DataStore.load();
-            DataStore.getCSECouncil();
-            renderArticles();
-            renderTeam();
+
+        function getCseRole(student) {
+            const council = DataStore.getCSECouncil();
+            if (!council?.stages) return '';
+            const titles = {
+                president: 'President',
+                vicePresident: 'Vice President',
+                science: 'Science',
+                religiousCulture: 'Religious & Culture',
+                art: 'Art',
+                social: 'Social',
+                sports: 'Sports'
+            };
+            for (const stage of ['secondary', 'preparatory', 'primary']) {
+                for (const [roleKey, roleName] of Object.entries(council.stages[stage] || {})) {
+                    if (roleName === student.name) {
+                        return `${stage.charAt(0).toUpperCase() + stage.slice(1)} ${titles[roleKey] || roleKey} Rep`;
+                    }
+                }
+            }
+            return '';
         }
-        
+
+        function renderSettings() {
+            const site = DataStore.getSettings('site');
+            const hero = DataStore.getSettings('hero');
+            const about = DataStore.getSettings('about');
+            const school = DataStore.getSettings('school');
+            const social = DataStore.getSettings('social');
+            const videos = DataStore.getSettings('videos');
+            const footer = DataStore.getSettings('footer');
+
+            document.getElementById('heroTitle').textContent = hero.title || 'The Rising Times';
+            document.getElementById('heroSubtitle').textContent = hero.subtitle || '';
+            document.getElementById('heroReadMore').textContent = hero.readMore || 'Read News';
+            document.getElementById('aboutText').textContent = about.text || '';
+            document.getElementById('aboutCta').textContent = about.cta || 'Visit CSE Council';
+            document.getElementById('footerTagline').textContent = footer.tagline || '';
+            document.getElementById('footerName').textContent = (site.name || 'The Rising Times').toUpperCase();
+            document.getElementById('footerSchool').textContent = [site.school, site.system].filter(Boolean).join(' | ');
+            document.getElementById('footerCopyright').textContent = footer.copyright || '© 2026 All Rights Reserved';
+
+            const schoolList = document.getElementById('schoolList');
+            schoolList.innerHTML = (school.items || [])
+                .map((item) => `<li>${Utils.escapeHtml(item)}</li>`)
+                .join('');
+
+            const socialNav = document.getElementById('socialNav');
+            socialNav.innerHTML = [
+                social.instagram
+                    ? `<a href="${Utils.escapeAttr(social.instagram)}" target="_blank" rel="noopener"><img src="assets/images/instagram.webp" alt="Rising Times Instagram"></a>`
+                    : '',
+                social.facebook
+                    ? `<a href="${Utils.escapeAttr(social.facebook)}" target="_blank" rel="noopener" class="fb-btn"><img src="assets/images/facebook.png" alt="Rising Stars Facebook"></a>`
+                    : ''
+            ].join('');
+
+            const videoLinks = [
+                { url: videos.main, image: 'assets/images/dastar3.png', alt: 'Rising News Video', className: 'dastar3-link' },
+                { url: videos.secondary, image: 'assets/images/dastar2.png', alt: 'Rising Stars Video', className: 'dastar2-link' }
+            ].filter((item) => item.url && Utils.youtubeId(item.url));
+
+            document.getElementById('heroVideos').innerHTML = videoLinks
+                .map(
+                    (item) =>
+                        `<a href="${Utils.escapeAttr(item.url)}" target="_blank" rel="noopener" class="star-btn-hover ${item.className}"><img src="${item.image}" alt="${item.alt}" class="${item.className.replace('-link', '-img')}"></a>`
+                )
+                .join('');
+        }
+
         function renderTeam() {
             const desktop = document.getElementById('teamGridDesktop');
             const carousel = document.getElementById('teamCarousel');
             const dots = document.getElementById('teamDots');
-            const students = DataStore.getStudents().filter(s => s.type === 'student');
-            
-            const ahmedAlaa = students.find(s => s.name === 'Ahmed Alaadin Hassan Darmelli');
-            const youssef = students.find(s => s.name === 'Youssef Ahmed Sabry');
-            const thirdStudent = students.find(s => s.name !== 'Ahmed Alaadin Hassan Darmelli' && s.name !== 'Youssef Ahmed Sabry');
-            const orderedStudents = [ahmedAlaa, youssef, thirdStudent].filter(Boolean);
-            
-            const extraNames = ['Lily Ahmed', 'Ahmed Adel Abd Elhafeez'];
-            const extraMembers = extraNames.map(name => DataStore.getStudent(name)).filter(Boolean);
-            const allStudents = [...orderedStudents, ...extraMembers];
-            
-            const council = DataStore.getCSECouncil();
-            
-            const cardHtml = (student, showStarBadge) => {
-                const studentClass = student.class || 'Student';
-                const achievements = student.achievements ? student.achievements.map(a => `<span class="achievement-tag">${a}</span>`).join('') : '';
-                
-                let cseRoleHtml = '';
-                if (council && council.stages) {
-                    for (const stage of ['secondary', 'preparatory', 'primary']) {
-                        for (const [roleKey, roleName] of Object.entries(council.stages[stage])) {
-                            if (roleName === student.name) {
-                                const roleTitles = { president: 'President', vicePresident: 'Vice President', science: 'Science', religiousCulture: 'Religious & Culture', art: 'Art', social: 'Social', sports: 'Sports' };
-                                const stageLabel = stage.charAt(0).toUpperCase() + stage.slice(1);
-                                cseRoleHtml = `<p class="cse-role">${stageLabel} ${roleTitles[roleKey] || roleKey} Rep</p>`;
-                                break;
-                            }
-                        }
-                        if (cseRoleHtml) break;
-                    }
-                }
-                
-                let topRoleHtml = '';
-                const topStudent = DataStore.topStudents?.find(ts => ts.name === student.name);
-                if (topStudent) {
-                    topRoleHtml = `<p class="top-role">${topStudent.role}</p>`;
-                }
-                
+            const team = DataStore.getTeamStudents();
+
+            if (!team.length) {
+                desktop.innerHTML = '<p class="empty-state">No team members found.</p>';
+                carousel.innerHTML = '<div class="tc-slide active"><p style="padding:20px;">No team members found.</p></div>';
+                dots.innerHTML = '';
+                return;
+            }
+
+            const cardHtml = (student) => {
+                const cseRole = getCseRole(student);
+                const topRole = student.is_top ? student.top_role || 'Top Student' : '';
+                const achievements = (student.achievements || [])
+                    .map((achievement) => `<span class="achievement-tag">${Utils.escapeHtml(achievement)}</span>`)
+                    .join('');
+                const image = student.image || '';
+
                 return `
-                    <div class="card team-card" onclick="viewStudent('${student.name}')">
-                        <img src="${student.image || ''}" alt="${student.name}" class="team-avatar" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27120%27 height=%27120%27%3E%3Ccircle cx=%2760%27 cy=%2760%27 r=%2760%27 fill=%27%23ddd%27/%3E%3C/svg%3E'">
-                        <span class="class-badge">${studentClass}</span>
-                        <div class="team-name">${student.name}${showStarBadge ? '<span class="star-badge">★ Star</span>' : ''}</div>
-                        ${topRoleHtml}
-                        ${cseRoleHtml}
-                        <div class="team-role">${student.role}</div>
+                    <div class="card team-card" onclick="viewStudent('${Utils.escapeAttr(student.slug)}')">
+                        <img src="${Utils.escapeAttr(image)}" alt="${Utils.escapeAttr(student.name)}" class="team-avatar" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27120%27 height=%27120%27%3E%3Ccircle cx=%2760%27 cy=%2760%27 r=%2760%27 fill=%27%23ddd%27/%3E%3C/svg%3E'">
+                        <span class="class-badge">${Utils.escapeHtml(student.class || 'Student')}</span>
+                        <div class="team-name">${Utils.escapeHtml(student.name)}${student.star && student.type === 'student' ? '<span class="star-badge">★ Star</span>' : ''}</div>
+                        ${topRole ? `<p class="top-role">${Utils.escapeHtml(topRole)}</p>` : ''}
+                        ${cseRole ? `<p class="cse-role">${Utils.escapeHtml(cseRole)}</p>` : ''}
+                        <div class="team-role">${Utils.escapeHtml(student.role || '')}</div>
                         ${achievements ? `<div class="achievements">${achievements}</div>` : ''}
-                        <div class="team-quote">"${student.quote}"</div>
-                    </div>
-                `;
+                        ${student.quote ? `<div class="team-quote">"${Utils.escapeHtml(student.quote)}"</div>` : ''}
+                    </div>`;
             };
-            
-            const mobileOrder = [youssef, ahmedAlaa, thirdStudent].filter(Boolean);
-            const mobileAll = [...mobileOrder, ...extraMembers];
-            
-            desktop.innerHTML = allStudents.map(s => cardHtml(s, s.star && s.type === 'student')).join('');
-            carousel.innerHTML = mobileAll.map((s, i) => `<div class="tc-slide ${i === 0 ? 'active' : ''}">${cardHtml(s, s.star && s.type === 'student')}</div>`).join('');
-            dots.innerHTML = mobileAll.length > 1 ? mobileAll.map((_, i) => `<span class="tc-dot ${i === 0 ? 'active' : ''}" onclick="goTeamSlide(${i})"></span>`).join('') : '';
+
+            const mobileTeam = team.length > 1 ? [team[1], team[0], ...team.slice(2)] : team;
+            desktop.innerHTML = team.map(cardHtml).join('');
+            carousel.innerHTML = mobileTeam
+                .map((student, index) => `<div class="tc-slide ${index === 0 ? 'active' : ''}">${cardHtml(student)}</div>`)
+                .join('');
+            dots.innerHTML = mobileTeam.length > 1
+                ? mobileTeam
+                      .map(
+                          (_, index) =>
+                              `<button class="tc-dot ${index === 0 ? 'active' : ''}" type="button" aria-label="Go to team member ${index + 1}" aria-selected="${index === 0}" onclick="goTeamSlide(${index})"></button>`
+                      )
+                      .join('')
+                : '';
         }
-        
+
         function renderArticles() {
             const grid = document.getElementById('articlesGrid');
+            const status = document.getElementById('articlesStatus');
             const events = DataStore.getEvents();
             const showAll = window._showAllEvents;
             const displayed = showAll ? events : events.slice(0, 6);
-            grid.innerHTML = displayed.map(event => {
-                const previewImage = DataStore.getEventPreviewImage(event);
-                const excerpt = DataStore.getEventExcerpt(event);
-                return `
-                    <div class="article-card ${event.featured ? 'featured' : ''}" onclick="viewArticle('${event.id}')">
-                        ${previewImage ? `<div class="card-image"><img src="${previewImage}" alt="${event.title}" onerror="this.style.display='none'"></div>` : ''}
-                        <div class="card-title">${event.title}</div>
-                        <p class="card-excerpt">${excerpt}</p>
-                    </div>
-                `;
-            }).join('');
-            
+
+            if (!events.length) {
+                grid.innerHTML = '<p class="empty-state">No news has been published yet. Check back soon.</p>';
+                status.textContent = '';
+                return;
+            }
+
+            status.textContent = `Showing ${displayed.length} of ${events.length} articles`;
+            grid.innerHTML = displayed
+                .map((event) => {
+                    const previewImage = DataStore.getEventPreviewImage(event);
+                    const excerpt = DataStore.getEventExcerpt(event);
+                    return `
+                        <div class="article-card ${event.featured ? 'featured' : ''}" onclick="viewArticle('${Utils.escapeAttr(event.id)}')">
+                            ${previewImage ? `<div class="card-image"><img src="${Utils.escapeAttr(previewImage)}" alt="${Utils.escapeAttr(event.title)}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>` : ''}
+                            <div class="card-title">${Utils.escapeHtml(event.title)}</div>
+                            <p class="card-excerpt">${Utils.escapeHtml(excerpt)}</p>
+                            ${event.date ? `<div class="card-meta">${Utils.escapeHtml(event.date)}</div>` : ''}
+                        </div>`;
+                })
+                .join('');
+
             let toggleBtn = document.getElementById('eventsToggle');
             if (events.length > 6) {
                 if (!toggleBtn) {
@@ -278,43 +334,56 @@
                     toggleBtn.style.cssText = 'text-align:center;margin-top:24px;';
                     grid.parentNode.appendChild(toggleBtn);
                 }
-                toggleBtn.innerHTML = `<button onclick="toggleEvents()" style="background:none;border:2px solid var(--primary-gold);color:var(--primary-gold);padding:10px 30px;border-radius:25px;cursor:pointer;font-size:14px;font-weight:700;transition:var(--transition);">${showAll ? 'Show Less ▲' : 'Show More ▼'}</button>`;
+                toggleBtn.innerHTML = `<button type="button" class="btn btn-outline" onclick="toggleEvents()">${showAll ? 'Show Less ▲' : 'Show More ▼'}</button>`;
                 toggleBtn.style.display = 'block';
             } else if (toggleBtn) {
                 toggleBtn.style.display = 'none';
             }
         }
-        
+
         function toggleEvents() {
             window._showAllEvents = !window._showAllEvents;
             renderArticles();
         }
-        
-        function viewStudent(name) { window.location.href = 'student.html?name=' + encodeURIComponent(name); }
-        function viewArticle(id) { 
-            if (id === 'cse-council-event') {
-                window.location.href = 'cse-council.html';
-            } else {
-                window.location.href = 'article.html?id=' + id; 
-            }
+
+        function viewStudent(slug) {
+            window.location.href = `student.html?slug=${encodeURIComponent(slug)}`;
         }
-        
+
+        function viewArticle(id) {
+            window.location.href = `article.html?id=${encodeURIComponent(id)}`;
+        }
+
         function toggleMenu() {
             document.getElementById('navLinks').classList.toggle('active');
             document.querySelector('.menu-toggle').classList.toggle('active');
         }
-        
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', function(e) {
+
+        document.querySelectorAll('.nav-links a').forEach((link) => {
+            link.addEventListener('click', function (event) {
                 if (this.getAttribute('href').startsWith('#')) {
-                    e.preventDefault();
-                    document.getElementById(this.getAttribute('href').slice(1))?.scrollIntoView({behavior:'smooth'});
-                    document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+                    event.preventDefault();
+                    document.getElementById(this.getAttribute('href').slice(1))?.scrollIntoView({ behavior: 'smooth' });
+                    document.querySelectorAll('.nav-links a').forEach((item) => item.classList.remove('active'));
                     this.classList.add('active');
                 }
             });
         });
-        
+
+        async function init() {
+            try {
+                await DataStore.load();
+                DataStore.applySiteMeta();
+                renderSettings();
+                renderArticles();
+                renderTeam();
+            } catch (error) {
+                document.getElementById('articlesGrid').innerHTML = `<p class="error-state">Could not load the magazine. ${Utils.escapeHtml(error.message)}</p>`;
+                document.getElementById('articlesStatus').textContent = '';
+                document.getElementById('teamGridDesktop').innerHTML = '';
+            }
+        }
+
         init();
     </script>
 </body>

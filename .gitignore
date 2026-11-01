@@ -1,1 +1,9 @@
 .idea
+node_modules
+.env
+.env.local
+.env.*.local
+supabase/.temp
+supabase/.branches
+.DS_Store
+*.log

@@ -23,48 +23,36 @@
         .filter-bar { display: flex; justify-content: center; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
         .filter-btn { padding: 8px 20px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition); color: rgba(255,255,255,0.8); }
         .filter-btn.active, .filter-btn:hover { border-color: var(--primary-gold); background: var(--primary-gold); color: var(--primary-black); }
-        .students-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        @media (min-width: 1024px) { .students-grid { grid-template-columns: repeat(5, 1fr); } }
-        @media (max-width: 768px) { .students-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
-        @media (max-width: 480px) { .students-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
-        .student-card { background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,244,240,0.9) 100%); border-radius: 12px; padding: 20px; text-align: center; box-shadow: var(--shadow-md); transition: var(--transition); cursor: pointer; border: 1px solid rgba(0,0,0,0.06); text-align: center; }
+        .students-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+        @media (min-width: 1024px) { .students-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+        @media (max-width: 768px) { .students-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+        @media (max-width: 480px) { .students-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } }
+        .student-card { background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,244,240,0.9) 100%); border-radius: 12px; padding: 20px; text-align: center; box-shadow: var(--shadow-md); transition: var(--transition); cursor: pointer; border: 1px solid rgba(0,0,0,0.06); min-width: 0; overflow-wrap: break-word; }
         .student-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-        
-        /* Base star style - gold border */
         .student-card.star { border: 3px solid var(--primary-gold); box-shadow: 0 0 20px rgba(201,168,76,0.6); }
         .student-card.star.teacher { background: linear-gradient(145deg, #722F37 0%, #4A1F29 100%); border-color: var(--primary-gold); }
         .student-card.star.secondary { background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%); border-color: var(--primary-gold); box-shadow: 0 0 0 3px #333, 0 0 25px rgba(201,168,76,0.6); }
         .student-card.star.preparatory { background: linear-gradient(145deg, #1B4D3E 0%, #0F2E25 100%); border-color: var(--primary-gold); box-shadow: 0 0 0 3px #2A6B54, 0 0 25px rgba(201,168,76,0.6); }
         .student-card.star.primary { background: linear-gradient(145deg, #2C5282 0%, #1A3652 100%); border-color: var(--primary-gold); box-shadow: 0 0 0 3px #4299E1, 0 0 25px rgba(201,168,76,0.6); }
         .student-card.star.teacher { box-shadow: 0 0 0 3px #922B3E, 0 0 25px rgba(201,168,76,0.6); }
-        
         .student-card.star h3 { color: var(--primary-gold); }
         .student-card.star .role { color: rgba(255,255,255,0.7); }
         .student-card.star .cse-role { color: #6A1B9A; background: white; }
         .student-card.star .class-badge { background: var(--primary-gold); color: var(--primary-black); }
-        
-        /* Teacher colors */
-        .student-card.teacher { background: linear-gradient(145deg, #722F37 0%, #4A1F29 100%); border: 2px solid #922B3E; color: #fff; text-align: center; }
+        .student-card.teacher { background: linear-gradient(145deg, #722F37 0%, #4A1F29 100%); border: 2px solid #922B3E; color: #fff; }
         .student-card.teacher h3 { color: #fff; }
         .student-card.teacher .role { color: rgba(255,255,255,0.8); }
-        .student-card.teacher .class-badge { background: #922B3E; color: #fff; text-align: center; }
-        
-        /* Secondary */
+        .student-card.teacher .class-badge { background: #922B3E; color: #fff; }
         .student-card.secondary { background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%); border: 2px solid #333; color: #fff; }
         .student-card.secondary h3 { color: #fff; }
         .student-card.secondary .class-badge { background: #333; color: #fff; }
-        
-        /* Preparatory */
         .student-card.preparatory { background: linear-gradient(145deg, #1B4D3E 0%, #0F2E25 100%); border: 2px solid #2A6B54; color: #fff; }
         .student-card.preparatory h3 { color: #fff; }
         .student-card.preparatory .class-badge { background: #2A6B54; color: #fff; }
-        
-        /* Primary */
         .student-card.primary { background: linear-gradient(145deg, #2C5282 0%, #1A3652 100%); border: 2px solid #4299E1; color: #fff; }
         .student-card.primary h3 { color: #fff; }
         .student-card.primary .class-badge { background: #4299E1; color: #fff; }
         .student-card.primary .role { color: rgba(255,255,255,0.7); }
-        
         .student-card img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-gold); margin: 0 auto 12px; box-shadow: 0 4px 16px rgba(201,168,76,0.3); display: block; }
         .student-card h3 { font-size: 14px; margin-bottom: 4px; }
         .student-card .cse-role { color: #6A1B9A; font-size: 10px; font-weight: 700; margin-top: 4px; background: white; padding: 3px 8px; border-radius: 10px; display: inline-block; }
@@ -85,7 +73,7 @@
 
     <nav class="navbar">
         <div class="container flex justify-between items-center">
-            <a href="index.html" class="logo"><img src="assets/images/logo.png" alt="Logo"></a>
+            <a href="index.html" class="logo"><img src="assets/images/logo.png" alt="The Rising Times logo"></a>
             <a href="javascript:void(0)" onclick="window.history.back()" class="btn btn-primary" style="padding:8px 16px;font-size:12px;">&larr; Back</a>
         </div>
     </nav>
@@ -93,22 +81,24 @@
     <div class="students-header">
         <h1>Stars</h1>
         <p>Celebrating excellence at Rising Stars Language School</p>
-        <input type="text" id="searchInput" class="search-input" placeholder="Search students..." oninput="renderStudents()">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search students..." aria-label="Search students" oninput="renderStudents()">
         <div class="filter-bar">
-            <button class="filter-btn active" onclick="filterStudents('all')">All</button>
-            <button class="filter-btn" onclick="filterStudents('star')">★ Stars</button>
-            <button class="filter-btn" onclick="filterStudents('teacher')">Teachers</button>
-            <button class="filter-btn" onclick="filterStudents('student')">Students</button>
-            <button class="filter-btn" onclick="filterStudents('Primary')">Primary</button>
-            <button class="filter-btn" onclick="filterStudents('Preparatory')">Preparatory</button>
-            <button class="filter-btn" onclick="filterStudents('Secondary')">Secondary</button>
+            <button class="filter-btn active" type="button" onclick="filterStudents('all', this)">All</button>
+            <button class="filter-btn" type="button" onclick="filterStudents('star', this)">★ Stars</button>
+            <button class="filter-btn" type="button" onclick="filterStudents('teacher', this)">Teachers</button>
+            <button class="filter-btn" type="button" onclick="filterStudents('student', this)">Students</button>
+            <button class="filter-btn" type="button" onclick="filterStudents('Primary', this)">Primary</button>
+            <button class="filter-btn" type="button" onclick="filterStudents('Preparatory', this)">Preparatory</button>
+            <button class="filter-btn" type="button" onclick="filterStudents('Secondary', this)">Secondary</button>
         </div>
         <a href="cse-council.html" class="cse-link-btn">View CSE Council</a>
     </div>
 
     <section class="section">
         <div class="container">
-            <div class="students-grid" id="studentsGrid"></div>
+            <div class="students-grid" id="studentsGrid">
+                <div class="loading-block" role="status">Loading students…</div>
+            </div>
         </div>
     </section>
 
@@ -120,198 +110,151 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/data.js"></script>
     <script>
         let currentFilter = 'all';
+        let priorityOrder = new Map();
 
-        async function init() {
-            await DataStore.load();
-            DataStore.getCSECouncil();
+        function filterStudents(filter, button) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach((item) => item.classList.remove('active'));
+            button?.classList.add('active');
             renderStudents();
         }
 
-        function filterStudents(filter) {
-            currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            renderStudents();
+        function getCseRole(student) {
+            const council = DataStore.getCSECouncil();
+            const titles = {
+                president: 'President',
+                vicePresident: 'Vice President',
+                science: 'Science',
+                religiousCulture: 'Religious & Culture',
+                art: 'Art',
+                social: 'Social',
+                sports: 'Sports'
+            };
+            for (const stage of ['secondary', 'preparatory', 'primary']) {
+                for (const [roleKey, roleName] of Object.entries(council.stages[stage] || {})) {
+                    if (roleName === student.name) {
+                        return `${stage.charAt(0).toUpperCase() + stage.slice(1)} ${titles[roleKey] || roleKey} Rep`;
+                    }
+                }
+            }
+            return '';
+        }
+
+        function countEvents(student) {
+            return DataStore.getEvents().reduce((count, event) => {
+                return (
+                    count +
+                    (event.elements || []).reduce((elementCount, element) => {
+                        const people = element.students || element.organizers || [];
+                        return (
+                            elementCount +
+                            people.filter(
+                                (person) =>
+                                    (student.uuid && person.student_id === student.uuid) ||
+                                    person.name?.toLowerCase() === student.name.toLowerCase()
+                            ).length
+                        );
+                    }, 0)
+                );
+            }, 0);
         }
 
         function renderStudents() {
-            let students = DataStore.getStudents();
-            
-            const searchTerm = (document.getElementById('searchInput')?.value || '').toLowerCase();
-            if (searchTerm) {
-                students = students.filter(s => s.name.toLowerCase().includes(searchTerm));
-            }
-            
-            const priorityConfig = [
-                { name: 'youssef', match: s => s.name.toLowerCase().includes('youssef') && !s.name.toLowerCase().includes('samy') },
-                { name: 'ahmed alaa', match: s => s.name.toLowerCase().includes('alaadin') },
-                { name: 'yassin', match: s => s.name.toLowerCase().includes('yassin') && !s.name.toLowerCase().includes('youssef') },
-                { name: 'ahmed sabry', match: s => s.name.toLowerCase().includes('ahmed') && s.name.toLowerCase().includes('sabry') && !s.name.toLowerCase().includes('youssef') && !s.name.toLowerCase().includes('yassin') },
-                { name: 'lily ahmed', match: s => s.name.toLowerCase().includes('lily') },
-                { name: 'ahmed adel', match: s => s.name.toLowerCase().includes('ahmed adel') }
-            ];
-            
-            const getPriorityIndex = (name) => {
-                for (let i = 0; i < priorityConfig.length; i++) {
-                    if (priorityConfig[i].match({ name })) return i;
-                }
-                return -1;
-            };
-            
-            const countEvents = (name) => {
-                const events = DataStore.getEvents();
-                let count = 0;
-                events.forEach(e => {
-                    if (e.elements) {
-                        e.elements.forEach(el => {
-                            if (el.students) {
-                                el.students.forEach(s => {
-                                    if (s.name && s.name.toLowerCase() === name.toLowerCase()) count++;
-                                });
-                            }
-                            if (el.organizers) {
-                                el.organizers.forEach(s => {
-                                    if (s.name && s.name.toLowerCase() === name.toLowerCase()) count++;
-                                });
-                            }
-                        });
-                    }
-                });
-                return count;
-            };
-            
-            if (currentFilter === 'all') {
-                students = students.filter(s => s.type === 'student' || s.type === 'teacher');
-            } else if (currentFilter === 'star') {
-                students = students.filter(s => s.star && s.type === 'student');
-            } else if (currentFilter === 'teacher') {
-                students = students.filter(s => s.type === 'teacher');
-            } else if (currentFilter === 'student') {
-                students = students.filter(s => s.type === 'student');
-            } else if (currentFilter === 'Primary' || currentFilter === 'Preparatory' || currentFilter === 'Secondary') {
-                students = students.filter(s => s.class === currentFilter);
-            }
-            
-            const isHead = (s) => (s.type === 'teacher' && s.name.toLowerCase().includes('raafat') && s.name.toLowerCase().includes('omran')) || s.name === 'Miss Somia';
-            
-            const classOrder = { 'Secondary': 0, 'Preparatory': 1, 'Primary': 2 };
-            const sortByClassThenEventsAndName = (a, b) => {
-                const aClass = classOrder[a.class] ?? 3;
-                const bClass = classOrder[b.class] ?? 3;
-                if (aClass !== bClass) return aClass - bClass;
-                const aCount = countEvents(a.name);
-                const bCount = countEvents(b.name);
-                if (bCount !== aCount) return bCount - aCount;
-                return a.name.localeCompare(b.name);
-            };
-            
-            const topNames = new Set((DataStore.topStudents || []).map(ts => ts.name));
-            const heads = students.filter(s => isHead(s));
-            const priorityStudents = students.filter(s => !isHead(s) && getPriorityIndex(s.name) >= 0);
-            const topStudentsList = students.filter(s => !isHead(s) && getPriorityIndex(s.name) < 0 && topNames.has(s.name));
-            
-            // Get CSE council members
-            const council = DataStore.getCSECouncil();
-            const cseNames = new Set();
-            if (council && council.stages) {
-                for (const stage of ['secondary', 'preparatory', 'primary']) {
-                    for (const [roleKey, memberName] of Object.entries(council.stages[stage])) {
-                        if (memberName) cseNames.add(memberName);
-                    }
-                }
-            }
-            const cseStudents = students.filter(s => !isHead(s) && getPriorityIndex(s.name) < 0 && !topNames.has(s.name) && cseNames.has(s.name));
-            const otherStars = students.filter(s => !isHead(s) && getPriorityIndex(s.name) < 0 && !topNames.has(s.name) && !cseNames.has(s.name) && s.star && s.type === 'student');
-            const starTeachers = students.filter(s => !isHead(s) && getPriorityIndex(s.name) < 0 && !topNames.has(s.name) && !cseNames.has(s.name) && s.star && s.type === 'teacher');
-            const regularStudents = students.filter(s => !isHead(s) && getPriorityIndex(s.name) < 0 && !topNames.has(s.name) && !cseNames.has(s.name) && !s.star);
-            
-            topStudentsList.sort(sortByClassThenEventsAndName);
-            priorityStudents.sort((a, b) => {
-                const aIdx = getPriorityIndex(a.name);
-                const bIdx = getPriorityIndex(b.name);
-                if (aIdx !== bIdx) return aIdx - bIdx;
-                return sortByClassThenEventsAndName(a, b);
-            });
-            
-            cseStudents.sort(sortByClassThenEventsAndName);
-            otherStars.sort(sortByClassThenEventsAndName);
-            starTeachers.sort(sortByClassThenEventsAndName);
-            regularStudents.sort(sortByClassThenEventsAndName);
-            
-            const teachers = [];
-            const nonTeachers = [];
-            
-            [...priorityStudents, ...topStudentsList, ...cseStudents, ...otherStars, ...starTeachers, ...regularStudents].forEach(s => {
-                if (s.type === 'teacher') {
-                    teachers.push(s);
-                } else {
-                    nonTeachers.push(s);
-                }
-            });
-            
-            const otherTeachers = teachers.filter(s => !isHead(s));
-            
-            students = [...heads, ...nonTeachers, ...otherTeachers];
-
             const grid = document.getElementById('studentsGrid');
+            let students = DataStore.getStudents();
+            const searchTerm = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+            if (searchTerm) {
+                students = students.filter((student) => student.name.toLowerCase().includes(searchTerm));
+            }
+
+            if (currentFilter === 'star') students = students.filter((student) => student.star && student.type === 'student');
+            else if (currentFilter === 'teacher') students = students.filter((student) => student.type === 'teacher');
+            else if (currentFilter === 'student') students = students.filter((student) => student.type === 'student');
+            else if (['Primary', 'Preparatory', 'Secondary'].includes(currentFilter)) {
+                students = students.filter((student) => student.class === currentFilter);
+            }
+
+            const classOrder = { Secondary: 0, Preparatory: 1, Primary: 2 };
+            const topNames = new Set(DataStore.getTopStudents().map((item) => item.name));
+            const council = DataStore.getCSECouncil();
+            const cseNames = new Set(
+                Object.values(council.stages || {}).flatMap((roles) => Object.values(roles || {})).filter(Boolean)
+            );
+
+            const rank = (student) => {
+                if (priorityOrder.has(student.slug)) return priorityOrder.get(student.slug);
+                if (topNames.has(student.name)) return 100;
+                if (cseNames.has(student.name)) return 200;
+                if (student.star && student.type === 'student') return 300;
+                return 400;
+            };
+
+            students.sort((a, b) => {
+                const rankDiff = rank(a) - rank(b);
+                if (rankDiff !== 0) return rankDiff;
+                const classDiff = (classOrder[a.class] ?? 3) - (classOrder[b.class] ?? 3);
+                if (classDiff !== 0) return classDiff;
+                const eventDiff = countEvents(b) - countEvents(a);
+                if (eventDiff !== 0) return eventDiff;
+                return a.name.localeCompare(b.name);
+            });
+
             if (!students.length) {
-                grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;">No students found.</p>';
+                grid.innerHTML = '<p class="empty-state" style="grid-column:1/-1;">No students found.</p>';
                 return;
             }
 
-            grid.innerHTML = students.map(s => {
-                const isStar = s.star && s.type === 'student';
-                const isTeacher = s.type === 'teacher';
-                const studentClass = s.class || 'Student';
-                const achievements = s.achievements ? s.achievements.map(a => `<span class="achievement-tag">${a}</span>`).join('') : '';
-                
-                let className = 'student-card';
-                if (isStar) className += ' star';
-                if (isTeacher) className += ' teacher';
-                else if (studentClass.toLowerCase()) className += ' ' + studentClass.toLowerCase();
-                
-                // Get CSE role if student is in CSE Council
-                let cseRoleHtml = '';
-                const council = DataStore.getCSECouncil();
-                const topStudents = DataStore.topStudents || [];
-                if (council && council.stages) {
-                    for (const stage of ['secondary', 'preparatory', 'primary']) {
-                        for (const [roleKey, roleName] of Object.entries(council.stages[stage])) {
-                            if (roleName === s.name) {
-                                const roleTitles = { president: 'President', vicePresident: 'Vice President', science: 'Science', religiousCulture: 'Religious & Culture', art: 'Art', social: 'Social', sports: 'Sports' };
-                                const stageLabel = stage.charAt(0).toUpperCase() + stage.slice(1);
-                                cseRoleHtml = `<p class="cse-role">${stageLabel} ${roleTitles[roleKey] || roleKey} Rep</p>`;
-                                break;
-                            }
-                        }
-                        if (cseRoleHtml) break;
-                    }
-                }
-                
-                let topRoleHtml = '';
-                const topStudent = topStudents.find(ts => ts.name === s.name);
-                if (topStudent) {
-                    topRoleHtml = `<p class="top-role">${topStudent.role}</p>`;
-                }
-                
-                return `
-                    <div class="${className}" onclick="viewStudent('${s.name}')">
-                        <img src="${s.image || ''}" alt="${s.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27140%27 height=%27140%27%3E%3Ccircle cx=%2770%27 cy=%2770%27 r=%2770%27 fill=%27%23ddd%27/%3E%3C/svg%3E'">
-                        ${!isTeacher ? `<span class="class-badge">${studentClass}</span>` : ''}
-                        <h3>${s.name}${isStar ? '<span class="star-badge">★ STAR</span>' : ''}</h3>
-                        ${topRoleHtml}
-                        ${cseRoleHtml}
-                        <p class="role">${s.role || ''}</p>
-                        ${achievements ? `<div class="achievements">${achievements}</div>` : ''}
-                    </div>`;
-            }).join('');
+            grid.innerHTML = students
+                .map((student) => {
+                    const isStar = student.star && student.type === 'student';
+                    const isTeacher = student.type === 'teacher';
+                    const studentClass = student.class || 'Student';
+                    const cseRole = getCseRole(student);
+                    const achievements = (student.achievements || [])
+                        .map((achievement) => `<span class="achievement-tag">${Utils.escapeHtml(achievement)}</span>`)
+                        .join('');
+
+                    let className = 'student-card';
+                    if (isStar) className += ' star';
+                    if (isTeacher) className += ' teacher';
+                    else if (studentClass) className += ` ${studentClass.toLowerCase()}`;
+
+                    return `
+                        <div class="${className}" onclick="viewStudent('${Utils.escapeAttr(student.slug)}')">
+                            <img src="${Utils.escapeAttr(student.image || '')}" alt="${Utils.escapeAttr(student.name)}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27140%27 height=%27140%27%3E%3Ccircle cx=%2770%27 cy=%2770%27 r=%2770%27 fill=%27%23ddd%27/%3E%3C/svg%3E'">
+                            ${!isTeacher ? `<span class="class-badge">${Utils.escapeHtml(studentClass)}</span>` : ''}
+                            <h3>${Utils.escapeHtml(student.name)}${isStar ? '<span class="star-badge">★ STAR</span>' : ''}</h3>
+                            ${student.is_top ? `<p class="top-role">${Utils.escapeHtml(student.top_role || 'Top Student')}</p>` : ''}
+                            ${cseRole ? `<p class="cse-role">${Utils.escapeHtml(cseRole)}</p>` : ''}
+                            <p class="role">${Utils.escapeHtml(student.role || '')}</p>
+                            ${achievements ? `<div class="achievements">${achievements}</div>` : ''}
+                        </div>`;
+                })
+                .join('');
         }
 
-        function viewStudent(name) {
-            window.location.href = 'student.html?name=' + encodeURIComponent(name);
+        function viewStudent(slug) {
+            window.location.href = `student.html?slug=${encodeURIComponent(slug)}`;
+        }
+
+        async function init() {
+            try {
+                await DataStore.load();
+                DataStore.applySiteMeta();
+                priorityOrder = new Map(
+                    DataStore.getPriorityStudents().map((student, index) => [student.slug, index])
+                );
+                renderStudents();
+            } catch (error) {
+                document.getElementById('studentsGrid').innerHTML = `<p class="error-state" style="grid-column:1/-1;">${Utils.escapeHtml(error.message)}</p>`;
+            }
         }
 
         init();
